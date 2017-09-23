@@ -52,7 +52,7 @@ printf "STARTTIME       = '$STARTTIME' '$STARTTIME_S'\n" | tee -a $TEST1OUTPUT
 printf "ENDTIME         = '$ENDTIME' '$ENDTIME_S'\n" | tee -a $TEST1OUTPUT
 
 # Make copy of SOL file and modify start and end times ---
-`cp modifiedContracts/*.sol .`
+`cp modifiedContracts/SnipCoin.sol .`
 # `cp $SOURCEDIR/*.sol .`
 
 # --- Modify parameters ---

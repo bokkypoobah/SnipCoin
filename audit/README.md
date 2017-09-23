@@ -6,6 +6,10 @@
 
 Status: To be commenced
 
+Commits
+[547c295](https://github.com/SnipToday/SnipCoin/commit/547c295895700ce44ab5d63cab506978e2f01634) and
+[022fbf8](https://github.com/SnipToday/SnipCoin/commit/022fbf8f901cba0dcffe8121f97580bfdcc2ba0b).
+
 <br />
 
 ## Summary
@@ -21,6 +25,8 @@ Status: To be commenced
 * [Summary](#summary)
   * [Crowdsale And Token Contract](#crowdsale-and-token-contract)
 * [Recommendations](#recommendations)
+  * [First Review Recommendations](#first-review-recommendations)
+  * [Second Review Recommendations](#second-review-recommendations)
 * [Potential Vulnerabilities](#potential-vulnerabilities)
 * [Scope](#scope)
 * [Limitations](#limitations)
@@ -33,22 +39,25 @@ Status: To be commenced
 
 <hr />
 
-
 ## Recommendations
+
+### First Review Recommendations
 
 * **LOW IMPORTANCE** Fix the compiler warnings - address not checksummed. Paste the address in the [https://etherscan.io](https://etherscan.io)
   search box and the checksummed address will be displayed. Use this checksummed address, e.g., `0x686f152daD6490DF93B267E319f875A684Bd26e2`.
 
-  For an example, see [test/modifiedContracts/SnipCoin.sol](test/modifiedContracts/SnipCoin.sol)
+  For an example, see [test/modifiedContracts/SnipCoin_firstreview_example.sol](test/modifiedContracts/SnipCoin_firstreview_example.sol)
 
       SnipCoin.sol:107:29: Warning: This looks like an address but has an invalid checksum. If this is not used as an address, please prepend '00'.
               saleWalletAddress = 0x686f152dad6490df93b267e319f875a684bd26e2; // Change before the sale
                                   ^----------------------------------------^
 
+  * [X] Fixed in [022fbf8](https://github.com/SnipToday/SnipCoin/commit/022fbf8f901cba0dcffe8121f97580bfdcc2ba0b)
+
 * **LOW IMPORTANCE** Fix the compiler warnings - unused variables. Replace the empty function body `{}` with a `;` for the
   *Token* interface to declare the functions as un-implemented functions that will be overridden in the derived contract.
 
-  For an example, see [test/modifiedContracts/SnipCoin.sol](test/modifiedContracts/SnipCoin.sol)
+  For an example, see [test/modifiedContracts/SnipCoin_firstreview_example.sol](test/modifiedContracts/SnipCoin_firstreview_example.sol)
 
       SnipCoin.sol:6:46: Warning: Unused local variable
           function totalSupply() constant returns (uint256 supply) {}
@@ -99,39 +108,69 @@ Status: To be commenced
           function allowance(address _owner, address _spender) constant returns (uint256 remaining) {}
                                                                                  ^---------------^
 
+  * [X] Fixed in [022fbf8](https://github.com/SnipToday/SnipCoin/commit/022fbf8f901cba0dcffe8121f97580bfdcc2ba0b) except for `totalSupply()`
+
 * **HIGH IMPORTANCE** The statement `totalSupply = 10000000000;` in `SnipCoin.SnipCoin()` should have the decimals factor
   factored in. The statement should be something like `totalSupply = 10000000000 * DECIMALS_MULTIPLIER;`, and the following
   statement should be `balances[msg.sender] = totalSupply;`
 
-  For an example, see [test/modifiedContracts/SnipCoin.sol](test/modifiedContracts/SnipCoin.sol)
+  For an example, see [test/modifiedContracts/SnipCoin_firstreview_example.sol](test/modifiedContracts/SnipCoin_firstreview_example.sol)
+
+  * [X] Fixed in [022fbf8](https://github.com/SnipToday/SnipCoin/commit/022fbf8f901cba0dcffe8121f97580bfdcc2ba0b)
 
 * **LOW IMPORTANCE** The [ERC20 token standard](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md)
   defines `decimals` as `uint8`. Update the token contract to use `uint8` instead of `uint`
 
-  For an example, see [test/modifiedContracts/SnipCoin.sol](test/modifiedContracts/SnipCoin.sol)
+  For an example, see [test/modifiedContracts/SnipCoin_firstreview_example.sol](test/modifiedContracts/SnipCoin_firstreview_example.sol)
+
+  * [X] Fixed in [022fbf8](https://github.com/SnipToday/SnipCoin/commit/022fbf8f901cba0dcffe8121f97580bfdcc2ba0b)
 
 * **LOW IMPORTANCE** `DECIMALS_MULTIPLIER = 1000000000000000000;` is a constant, but `decimals` is initialised in the
   `SnipCoin.SnipCoin()` constructor. As both these are directly related, consider using the statement
   `uint8 public constant decimals = 18;`, then `uint public constant DECIMALS_MULTIPLIER = 10**uint(decimals);`. And
   remove `decimals = 18;` in `SnipCoin.SnipCoin()`
 
-  For an example, see [test/modifiedContracts/SnipCoin.sol](test/modifiedContracts/SnipCoin.sol)
+  For an example, see [test/modifiedContracts/SnipCoin_firstreview_example.sol](test/modifiedContracts/SnipCoin_firstreview_example.sol)
+
+  * [X] Fixed in [022fbf8](https://github.com/SnipToday/SnipCoin/commit/022fbf8f901cba0dcffe8121f97580bfdcc2ba0b)
 
 * **MEDIUM IMPORTANCE** `tokenName` and `tokenSymbol` should be named `name` and `symbol` respectively, as documented in
   the [ERC20 token standard](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md). Consider defining
   these as constant values in `SnipCoin` like `string public constant symbol = "SNP";` and
   `string public constant name = "SnipCoin";`, removing the assignments in `SnipCoin.SnipCoin()`
 
-  For an example, see [test/modifiedContracts/SnipCoin.sol](test/modifiedContracts/SnipCoin.sol)
+  For an example, see [test/modifiedContracts/SnipCoin_firstreview_example.sol](test/modifiedContracts/SnipCoin_firstreview_example.sol)
+
+  * [X] Fixed in [022fbf8](https://github.com/SnipToday/SnipCoin/commit/022fbf8f901cba0dcffe8121f97580bfdcc2ba0b)
 
 * **LOW IMPORTANCE** `SnipCoin.sendCoin(...)` provides the exact same functionality as `StandardToken.transfer(...)`.
   Consider removing `SnipCoin.sendCoin(...)`
+
+  * [X] Fixed in [022fbf8](https://github.com/SnipToday/SnipCoin/commit/022fbf8f901cba0dcffe8121f97580bfdcc2ba0b)
 
 * **LOW IMPORTANCE** `SnipCoin.function()` has the statement `if (!saleWalletAddress.send(msg.value)) revert();` that
   can be written as `saleWalletAddress.transfer(msg.value);` that will throw an exception when there is an error. See the
   [difference between `send(...)` and `transfer(...)`](https://github.com/ConsenSys/smart-contract-best-practices#be-aware-of-the-tradeoffs-between-send-transfer-and-callvalue)
 
+  * [X] Fixed in [022fbf8](https://github.com/SnipToday/SnipCoin/commit/022fbf8f901cba0dcffe8121f97580bfdcc2ba0b)
+
 * **LOW IMPORTANCE** The variable `SnipCoin.ownerAddress` is unused and can be removed
+
+  * [X] Fixed in [022fbf8](https://github.com/SnipToday/SnipCoin/commit/022fbf8f901cba0dcffe8121f97580bfdcc2ba0b)
+
+<br />
+
+### Second Review Recommendations
+
+* **LOW IMPORTANCE** Fix the compiler warnings - unused variables. Replace the empty function body `{}` with a `;` for the
+  *Token* interface to declare the functions as un-implemented functions that will be overridden in the derived contract.
+
+  For an example, see [test/modifiedContracts/SnipCoin.sol](test/modifiedContracts/SnipCoin.sol)
+
+      SnipCoin.sol:6:46: Warning: Unused local variable
+          function totalSupply() constant returns (uint256 supply) {}
+                                                   ^------------^
+
 
 <br />
 

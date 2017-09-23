@@ -8,68 +8,281 @@ DEPLOYMENTDATA  = 'deploymentData.txt'
 INCLUDEJS       = './include.js'
 TEST1OUTPUT     = 'test1output.txt'
 TEST1RESULTS    = 'test1results.txt'
-CURRENTTIME     = '1505750300' 'Mon 18 Sep 2017 15:58:20 UTC'
-STARTTIME       = '1505750390' 'Mon 18 Sep 2017 15:59:50 UTC'
-ENDTIME         = '1505750480' 'Mon 18 Sep 2017 16:01:20 UTC'
+CURRENTTIME     = '1506215009' 'Sun 24 Sep 2017 01:03:29 UTC'
+STARTTIME       = '1506215099' 'Sun 24 Sep 2017 01:04:59 UTC'
+ENDTIME         = '1506215189' 'Sun 24 Sep 2017 01:06:29 UTC'
 --- Differences ../../contracts/SnipCoin.sol SnipCoin.sol ---
 6c6
 <     function totalSupply() constant returns (uint256 supply) {}
 ---
->     function totalSupply() constant returns (uint256 supply);
+>     function totalSupply() public constant returns (uint supply);
 10c10
-<     function balanceOf(address _owner) constant returns (uint256 balance) {}
+<     function balanceOf(address _owner) constant returns (uint256 );
 ---
->     function balanceOf(address _owner) constant returns (uint256 balance);
+>     function balanceOf(address _owner) public constant returns (uint);
 16c16
-<     function transfer(address _to, uint256 _value) returns (bool success) {}
+<     function transfer(address _to, uint256 _value) returns (bool success);
 ---
->     function transfer(address _to, uint256 _value) returns (bool success);
+>     function transfer(address _to, uint _value) public returns (bool success);
 23c23
-<     function transferFrom(address _from, address _to, uint256 _value) returns (bool success) {}
+<     function transferFrom(address _from, address _to, uint256 _value) returns (bool success);
 ---
->     function transferFrom(address _from, address _to, uint256 _value) returns (bool success);
+>     function transferFrom(address _from, address _to, uint _value) public returns (bool success);
 29c29
-<     function approve(address _spender, uint256 _value) returns (bool success) {}
+<     function approve(address _spender, uint256 _value) returns (bool success);
 ---
->     function approve(address _spender, uint256 _value) returns (bool success);
-34c34
-<     function allowance(address _owner, address _spender) constant returns (uint256 remaining) {}
+>     function approve(address _spender, uint _value) public returns (bool success);
+34c34,37
+<     function allowance(address _owner, address _spender) constant returns (uint256 remaining);
 ---
->     function allowance(address _owner, address _spender) constant returns (uint256 remaining);
-91,98c91,99
-<     string public tokenName;       // Token name
-<     uint public decimals;          // Decimal points for token
-<     string public tokenSymbol;          // Token identifier
+>     function allowance(address _owner, address _spender) public constant returns (uint remaining);
+> 
+>     event Transfer(address indexed _from, address indexed _to, uint _value);
+>     event Approval(address indexed _owner, address indexed _spender, uint _value);
+36,38d38
+<     event Transfer(address indexed _from, address indexed _to, uint256 _value);
+<     event Approval(address indexed _owner, address indexed _spender, uint256 _value);
+<     
+42,48c42,45
+<     
+<     function transfer(address _to, uint256 _value) returns (bool success) {
+<         //Default assumes totalSupply can't be over max (2^256 - 1).
+<         //If your token leaves out totalSupply and can issue more tokens as time goes on, you need to check if it doesn't wrap.
+<         //Replace the if with this one instead.
+<         //if (balances[msg.sender] >= _value && balances[_to] + _value > balances[_to]) {
+<         if (balances[msg.sender] >= _value && _value > 0) {
+---
+> 
+>     function transfer(address _to, uint _value) public returns (bool success) {
+>         if (balances[msg.sender] >= _value &&          // Account has sufficient balance
+>             balances[_to] + _value > balances[_to]) {  // Overflow check
+56,60c53,56
+<     function transferFrom(address _from, address _to, uint256 _value) returns (bool success) {
+<         //same as above. Replace this line with the following if you want to protect against wrapping uints.
+<         //if (balances[_from] >= _value && allowed[_from][msg.sender] >= _value && balances[_to] + _value > balances[_to]) {
+<         if (balances[_from] >= _value && allowed[_from][msg.sender] >= _value && _value > 0) {
+<             balances[_to] += _value;
+---
+>     function transferFrom(address _from, address _to, uint _value) public returns (bool success) {
+>         if (balances[_from] >= _value &&                // Account has sufficient balance
+>             allowed[_from][msg.sender] >= _value &&     // Amount has been approved
+>             balances[_to] + _value > balances[_to]) {   // Overflow check
+62a59
+>             balances[_to] += _value;
+68c65
+<     function balanceOf(address _owner) constant returns (uint256 balance) {
+---
+>     function balanceOf(address _owner) public constant returns (uint balance) {
+72c69
+<     function approve(address _spender, uint256 _value) returns (bool success) {
+---
+>     function approve(address _spender, uint _value) public returns (bool success) {
+78c75
+<     function allowance(address _owner, address _spender) constant returns (uint256 remaining) {
+---
+>     function allowance(address _owner, address _spender) public constant returns (uint remaining) {
+82,84c79,81
+<     mapping (address => uint256) balances;
+<     mapping (address => mapping (address => uint256)) allowed;
+<     uint256 public totalSupply;
+---
+>     mapping (address => uint) balances;
+>     mapping (address => mapping (address => uint)) allowed;
+>     uint public totalSupply;
+90d86
+<     /* Public variables of the token */
+92,101c88,97
+<     string public constant name = "SnipCoin";       // Token name
+<     string public symbol = "SNIP";          // Token identifier
+<     uint8 public constant decimals = 18;          // Decimal points for token
 <     uint public totalEthReceivedInWei; // The total amount of Ether received during the sale in WEI
 <     uint public totalUsdReceived; // The total amount of Ether received during the sale in USD terms
 <     string public version = "1.0"; // Code version
 <     address public saleWalletAddress;  // The wallet address where the Ether from the sale will be stored
-<     address public ownerAddress; // Address of the contract owner.
+<     
+<     mapping (address => bool) uncappedBuyerList; // The list of buyers allowed to participate in the sale without a cap
+<     mapping (address => bool) cappedBuyerList;   // The list of buyers allowed to participate in the sale
 ---
->     string public constant symbol = "SNP";     // Set the symbol for display purposes
->     string public constant name = "SnipCoin";  // Name of token
->     uint8 public constant decimals = 18;       // Decimal points for token
+>     string public constant name = "SnipCoin";         // Token name
+>     string public symbol = "SNIP";                    // Token identifier
+>     uint8 public constant decimals = 18;              // Decimal points for token
+>     uint public totalEthReceivedInWei;                // The total amount of Ether received during the sale in WEI
+>     uint public totalUsdReceived;                     // The total amount of Ether received during the sale in USD terms
+>     string public version = "1.0";                    // Code version
+>     address public saleWalletAddress;                 // The wallet address where the Ether from the sale will be stored
 > 
->     uint public totalEthReceivedInWei;         // The total amount of Ether received during the sale in WEI
->     uint public totalUsdReceived;              // The total amount of Ether received during the sale in USD terms
->     string public version = "1.0";             // Code version
->     address public saleWalletAddress;          // The wallet address where the Ether from the sale will be stored
->     address public ownerAddress;               // Address of the contract owner.
-101c102
-<     uint private constant DECIMALS_MULTIPLIER = 1000000000000000000;    
+>     mapping (address => bool) uncappedBuyerList;      // The list of buyers allowed to participate in the sale without a cap
+>     mapping (address => bool) cappedBuyerList;        // The list of buyers allowed to participate in the sale
+104,107c100,103
+<     bool public isSaleOpen = false; // This opens and closes upon external command
+<     uint public ethToUsdExchangeRate = 285; // Number of USD in one Eth
+<     
+<     address private contractOwner;  // Address of the contract owner
 ---
->     uint public constant DECIMALS_MULTIPLIER = 10**uint(decimals);
-107c108
-<         saleWalletAddress = 0x686f152dad6490df93b267e319f875a684bd26e2; // Change before the sale
+>     bool public isSaleOpen = false;                   // This opens and closes upon external command
+>     uint public ethToUsdExchangeRate = 285;           // Number of USD in one Eth
+> 
+>     address private contractOwner;                    // Address of the contract owner
+111,115c107,150
+<     uint private constant DECIMALS_MULTIPLIER = 10**uint(decimals);    // Multiplier for the decimals
+<     uint private constant WEI_IN_ETHER = 1000 * 1000 * 1000 * 1000 * 1000 * 1000; // Number of wei in 1 eth
+<     uint public constant SALE_CAP_IN_USD = 8000000;  // The total sale cap in USD
+<     uint public constant MINIMUM_PURCHASE_IN_USD = 50;  // It is impossible to purchase tokens for more than $50 in the sale.
+<     uint public constant USD_PURCHASE_AMOUNT_REQUIRING_ID = 4500;  // Above this purchase amount an ID is required.
 ---
->         saleWalletAddress = 0x686f152daD6490DF93B267E319f875A684Bd26e2; // Change before the sale
-130,135c131,132
-<         totalSupply = 10000000000;                                      // In total, 10 billion tokens
-<         balances[msg.sender] = totalSupply * DECIMALS_MULTIPLIER;        // Initially give owner all of the tokens 
+>     uint private constant DECIMALS_MULTIPLIER = 10**uint(decimals);  // Multiplier for the decimals
+>     uint public constant SALE_CAP_IN_USD = 8000000;                  // The total sale cap in USD
+>     uint public constant MINIMUM_PURCHASE_IN_USD = 50;               // It is impossible to purchase tokens for more than $50 in the sale.
+>     uint public constant USD_PURCHASE_AMOUNT_REQUIRING_ID = 4500;    // Above this purchase amount an ID is required.
+> 
+>     modifier onlyPermissioned() {
+>         require((msg.sender == contractOwner) || (msg.sender == accountWithUpdatePermissions));
+>         _;
+>     }
+> 
+>     modifier verifySaleNotOver() {
+>         require(isSaleOpen);
+>         require(totalUsdReceived < SALE_CAP_IN_USD); // Make sure that sale isn't over
+>         _;
+>     }
+> 
+>     modifier verifyBuyerCanMakePurchase() {
+>         uint purchaseValueInUSD = uint(msg.value / getWeiToUsdExchangeRate()); // The USD worth of tokens sold
+> 
+>         require(purchaseValueInUSD > MINIMUM_PURCHASE_IN_USD); // Minimum transfer is of $50
+> 
+>         uint EFFECTIVE_MAX_CAP = SALE_CAP_IN_USD + 1000;  // This allows for the end of the sale by passing $8M and reaching the cap
+>         require(EFFECTIVE_MAX_CAP - totalUsdReceived > purchaseValueInUSD); // Make sure that there is enough usd left to buy.
+> 
+>         if (purchaseValueInUSD >= USD_PURCHASE_AMOUNT_REQUIRING_ID) // Check if buyer is on uncapped white list
+>         {
+>             require(uncappedBuyerList[msg.sender]);
+>         }
+>         if (purchaseValueInUSD < USD_PURCHASE_AMOUNT_REQUIRING_ID) // Check if buyer is on capped white list
+>         {
+>             require(cappedBuyerList[msg.sender] || uncappedBuyerList[msg.sender]);
+>         }
+>         _;
+>     }
+> 
+>     function SnipCoin() public {
+>         initializeSaleWalletAddress();
+>         initializeEthReceived();
+>         initializeUsdReceived();
+> 
+>         contractOwner = msg.sender;                      // The creator of the contract is its owner
+>         totalSupply = 10000000000 * DECIMALS_MULTIPLIER; // In total, 10 billion tokens
+>         balances[msg.sender] = totalSupply;              // Initially give owner all of the tokens 
+>     }
+117,118c152
+<     function initializeSaleWalletAddress()
+<     {
+---
+>     function initializeSaleWalletAddress() internal {
+122,124c156,157
+<     function initializeEthReceived()
+<     {
+<         totalEthReceivedInWei = 14500 * WEI_IN_ETHER; // Ether received before public sale. Verify this figure before the sale starts.
+---
+>     function initializeEthReceived() internal {
+>         totalEthReceivedInWei = 14500 * 1 ether; // Ether received before public sale. Verify this figure before the sale starts.
+127,128c160
+<     function initializeUsdReceived()
+<     {
+---
+>     function initializeUsdReceived() internal {
+132,133c164
+<     function getBalance(address addr) returns(uint)
+<     {
+---
+>     function getBalance(address addr) public constant returns(uint) {
+137,139c168,169
+<     function getWeiToUsdExchangeRate() returns(uint)
+<     {
+<         return WEI_IN_ETHER / ethToUsdExchangeRate; // Returns how much Wei one USD is worth
+---
+>     function getWeiToUsdExchangeRate() public returns(uint) {
+>         return 1 ether / ethToUsdExchangeRate; // Returns how much Wei one USD is worth
+142,144c172
+<     function updateEthToUsdExchangeRate(uint newEthToUsdExchangeRate)
+<     {
+<         require((msg.sender == contractOwner) || (msg.sender == accountWithUpdatePermissions)); // Verify ownership
+---
+>     function updateEthToUsdExchangeRate(uint newEthToUsdExchangeRate) public onlyPermissioned {
+148,150c176
+<     function updateSnipCoinToEtherExchangeRate(uint newSnipCoinToEtherExchangeRate)
+<     {
+<         require((msg.sender == contractOwner) || (msg.sender == accountWithUpdatePermissions)); // Verify ownership
+---
+>     function updateSnipCoinToEtherExchangeRate(uint newSnipCoinToEtherExchangeRate) public onlyPermissioned {
+154,156c180
+<     function openOrCloseSale(bool saleCondition)
+<     {
+<         require((msg.sender == contractOwner) || (msg.sender == accountWithUpdatePermissions)); // Verify ownership
+---
+>     function openOrCloseSale(bool saleCondition) public onlyPermissioned {
+160,162c184
+<     function addAddressToCappedAddresses(address addr)
+<     {
+<         require((msg.sender == contractOwner) || (msg.sender == accountWithUpdatePermissions)); // Verify ownership
+---
+>     function addAddressToCappedAddresses(address addr) public onlyPermissioned {
+166,168c188
+<     function addAddressToUncappedAddresses(address addr)
+<     {
+<         require((msg.sender == contractOwner) || (msg.sender == accountWithUpdatePermissions)); // Verify ownership
+---
+>     function addAddressToUncappedAddresses(address addr) public onlyPermissioned {
+172,211c192,196
+<     function SnipCoin()
+<     {
+<         initializeSaleWalletAddress();
+<         initializeEthReceived();
+<         initializeUsdReceived();
+< 
+<         contractOwner = msg.sender; // The creator of the contract is its owner
+<         totalSupply = 10000000000 * DECIMALS_MULTIPLIER;      // In total, 10 billion tokens
+<         balances[msg.sender] = totalSupply;        // Initially give owner all of the tokens 
+<     }
+< 
+<     function verifySaleNotOver()
+<     {
+<         require(isSaleOpen);
+<         require(totalUsdReceived < SALE_CAP_IN_USD); // Make sure that sale isn't over
+<     }
+< 
+<     function verifyBuyerCanMakePurchase() payable
+<     {
+<         uint purchaseValueInUSD = uint(msg.value / getWeiToUsdExchangeRate()); // The USD worth of tokens sold
+< 
+<         require(purchaseValueInUSD > MINIMUM_PURCHASE_IN_USD); // Minimum transfer is of $50
+< 
+<         uint EFFECTIVE_MAX_CAP = SALE_CAP_IN_USD + 1000;  // This allows for the end of the sale by passing $8M and reaching the cap
+<         require(EFFECTIVE_MAX_CAP - totalUsdReceived > purchaseValueInUSD); // Make sure that there is enough usd left to buy.
 <         
-<         tokenName = "SnipCoin";                              // Name of token
-<         decimals = 18;                                       // Amount of decimals for display purposes
-<         tokenSymbol = "SNP";                                      // Set the symbol for display purposes
+<         if (purchaseValueInUSD >= USD_PURCHASE_AMOUNT_REQUIRING_ID) // Check if buyer is on uncapped white list
+<         {
+<             require(uncappedBuyerList[msg.sender]);
+<         }
+<         if (purchaseValueInUSD < USD_PURCHASE_AMOUNT_REQUIRING_ID) // Check if buyer is on capped white list
+<         {
+<             require(cappedBuyerList[msg.sender] || uncappedBuyerList[msg.sender]);
+<         }
+<     }
+< 
+<     function () payable
+<     {
+<         verifySaleNotOver();
+<         verifyBuyerCanMakePurchase();
 ---
->         totalSupply = 10000000000 * DECIMALS_MULTIPLIER;  // In total, 10 billion tokens
->         balances[msg.sender] = totalSupply;               // Initially give owner all of the tokens 
+>     function () public payable verifySaleNotOver verifyBuyerCanMakePurchase {
+>         uint tokens = snipCoinToEtherExchangeRate * msg.value / 1 ether;
+>         balances[contractOwner] -= tokens;
+>         balances[msg.sender] += tokens;
+>         Transfer(contractOwner, msg.sender, tokens);
+213,214d197
+<         saleWalletAddress.transfer(msg.value); // Transfer ether to safe sale address
+<         transferFrom(contractOwner, msg.sender, uint(snipCoinToEtherExchangeRate * msg.value / WEI_IN_ETHER)); // Send tokens to buyer according to ratio
+216a200,201
+> 
+>         saleWalletAddress.transfer(msg.value); // Transfer ether to safe sale address
