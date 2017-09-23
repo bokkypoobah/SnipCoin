@@ -1,0 +1,75 @@
+MODE            = 'test'
+GETHATTACHPOINT = 'ipc:./testchain/geth.ipc'
+PASSWORD        = 'testtest'
+SOURCEDIR       = '../../contracts'
+CROWDSALESOL    = 'SnipCoin.sol'
+CROWDSALEJS     = 'SnipCoin.js'
+DEPLOYMENTDATA  = 'deploymentData.txt'
+INCLUDEJS       = './include.js'
+TEST1OUTPUT     = 'test1output.txt'
+TEST1RESULTS    = 'test1results.txt'
+CURRENTTIME     = '1505750300' 'Mon 18 Sep 2017 15:58:20 UTC'
+STARTTIME       = '1505750390' 'Mon 18 Sep 2017 15:59:50 UTC'
+ENDTIME         = '1505750480' 'Mon 18 Sep 2017 16:01:20 UTC'
+--- Differences ../../contracts/SnipCoin.sol SnipCoin.sol ---
+6c6
+<     function totalSupply() constant returns (uint256 supply) {}
+---
+>     function totalSupply() constant returns (uint256 supply);
+10c10
+<     function balanceOf(address _owner) constant returns (uint256 balance) {}
+---
+>     function balanceOf(address _owner) constant returns (uint256 balance);
+16c16
+<     function transfer(address _to, uint256 _value) returns (bool success) {}
+---
+>     function transfer(address _to, uint256 _value) returns (bool success);
+23c23
+<     function transferFrom(address _from, address _to, uint256 _value) returns (bool success) {}
+---
+>     function transferFrom(address _from, address _to, uint256 _value) returns (bool success);
+29c29
+<     function approve(address _spender, uint256 _value) returns (bool success) {}
+---
+>     function approve(address _spender, uint256 _value) returns (bool success);
+34c34
+<     function allowance(address _owner, address _spender) constant returns (uint256 remaining) {}
+---
+>     function allowance(address _owner, address _spender) constant returns (uint256 remaining);
+91,98c91,99
+<     string public tokenName;       // Token name
+<     uint public decimals;          // Decimal points for token
+<     string public tokenSymbol;          // Token identifier
+<     uint public totalEthReceivedInWei; // The total amount of Ether received during the sale in WEI
+<     uint public totalUsdReceived; // The total amount of Ether received during the sale in USD terms
+<     string public version = "1.0"; // Code version
+<     address public saleWalletAddress;  // The wallet address where the Ether from the sale will be stored
+<     address public ownerAddress; // Address of the contract owner.
+---
+>     string public constant symbol = "SNP";     // Set the symbol for display purposes
+>     string public constant name = "SnipCoin";  // Name of token
+>     uint8 public constant decimals = 18;       // Decimal points for token
+> 
+>     uint public totalEthReceivedInWei;         // The total amount of Ether received during the sale in WEI
+>     uint public totalUsdReceived;              // The total amount of Ether received during the sale in USD terms
+>     string public version = "1.0";             // Code version
+>     address public saleWalletAddress;          // The wallet address where the Ether from the sale will be stored
+>     address public ownerAddress;               // Address of the contract owner.
+101c102
+<     uint private constant DECIMALS_MULTIPLIER = 1000000000000000000;    
+---
+>     uint public constant DECIMALS_MULTIPLIER = 10**uint(decimals);
+107c108
+<         saleWalletAddress = 0x686f152dad6490df93b267e319f875a684bd26e2; // Change before the sale
+---
+>         saleWalletAddress = 0x686f152daD6490DF93B267E319f875A684Bd26e2; // Change before the sale
+130,135c131,132
+<         totalSupply = 10000000000;                                      // In total, 10 billion tokens
+<         balances[msg.sender] = totalSupply * DECIMALS_MULTIPLIER;        // Initially give owner all of the tokens 
+<         
+<         tokenName = "SnipCoin";                              // Name of token
+<         decimals = 18;                                       // Amount of decimals for display purposes
+<         tokenSymbol = "SNP";                                      // Set the symbol for display purposes
+---
+>         totalSupply = 10000000000 * DECIMALS_MULTIPLIER;  // In total, 10 billion tokens
+>         balances[msg.sender] = totalSupply;               // Initially give owner all of the tokens 
