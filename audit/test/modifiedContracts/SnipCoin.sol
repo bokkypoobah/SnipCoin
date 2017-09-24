@@ -45,7 +45,7 @@ contract StandardToken is Token {
 
     function transfer(address _to, uint _value) public returns (bool success) {
         if (balances[msg.sender] >= _value &&          // Account has sufficient balance
-            balances[_to] + _value > balances[_to]) {  // Overflow check
+            balances[_to] + _value >= balances[_to]) { // Overflow check
             balances[msg.sender] -= _value;
             balances[_to] += _value;
             Transfer(msg.sender, _to, _value);
@@ -56,7 +56,7 @@ contract StandardToken is Token {
     function transferFrom(address _from, address _to, uint _value) public returns (bool success) {
         if (balances[_from] >= _value &&                // Account has sufficient balance
             allowed[_from][msg.sender] >= _value &&     // Amount has been approved
-            balances[_to] + _value > balances[_to]) {   // Overflow check
+            balances[_to] + _value >= balances[_to]) {  // Overflow check
             balances[_from] -= _value;
             allowed[_from][msg.sender] -= _value;
             balances[_to] += _value;

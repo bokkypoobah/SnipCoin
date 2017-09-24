@@ -4,7 +4,7 @@
 
 [https://www.snip.network/sale/signup/?next=/sale/](https://www.snip.network/sale/signup/?next=/sale/)
 
-Status: To be commenced
+Status: Work in progress
 
 Commits
 [547c295](https://github.com/SnipToday/SnipCoin/commit/547c295895700ce44ab5d63cab506978e2f01634) and
@@ -220,6 +220,8 @@ For an example, see [test/modifiedContracts/SnipCoin.sol](test/modifiedContracts
   the `transferFrom(...)` function. This `throw` behaviour has not been implemented in the example.
 
 <br />
+
+<hr />
 
 ## Potential Vulnerabilities
 
