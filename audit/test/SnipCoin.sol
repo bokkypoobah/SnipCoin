@@ -168,7 +168,7 @@ contract SnipCoin is StandardToken {
         return balances[addr];
     }
 
-    function getWeiToUsdExchangeRate() public returns(uint) {
+    function getWeiToUsdExchangeRate() public constant returns(uint) {
         return 1 ether / ethToUsdExchangeRate; // Returns how much Wei one USD is worth
     }
 

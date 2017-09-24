@@ -192,6 +192,16 @@ contract SnipCoin is StandardToken {
         uncappedBuyerList[addr] = true; // Allow a certain address to purchase SnipCoin above the cap (>=$4500)
     }
 
+    function transfer(address _to, uint _value) public returns (bool success) {
+        require(!isSaleOpen);
+        return super.transfer(_to, _value);
+    }
+
+    function transferFrom(address _from, address _to, uint _value) public returns (bool success) {
+        require(!isSaleOpen);
+        return super.transferFrom(_from, _to, _value);
+    }
+
     function () public payable verifySaleNotOver verifyBuyerCanMakePurchase {
         uint tokens = snipCoinToEtherExchangeRate * msg.value / 1 ether;
         balances[contractOwner] -= tokens;

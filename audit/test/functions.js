@@ -211,40 +211,19 @@ function printTokenContractDetails() {
     var latestBlock = eth.blockNumber;
     var i;
 
-    var ownershipTransferredEvent = contract.OwnershipTransferred({}, { fromBlock: tokenFromBlock, toBlock: latestBlock });
-    i = 0;
-    ownershipTransferredEvent.watch(function (error, result) {
-      console.log("RESULT: OwnershipTransferred " + i++ + " #" + result.blockNumber + " " + JSON.stringify(result.args));
-    });
-    ownershipTransferredEvent.stopWatching();
-
-    var adminstratorAddedEvent = contract.AdminstratorAdded({}, { fromBlock: tokenFromBlock, toBlock: latestBlock });
-    i = 0;
-    adminstratorAddedEvent.watch(function (error, result) {
-      console.log("RESULT: AdminstratorAdded " + i++ + " #" + result.blockNumber + " " + JSON.stringify(result.args));
-    });
-    adminstratorAddedEvent.stopWatching();
-
-    var adminstratorRemovedEvent = contract.AdminstratorRemoved({}, { fromBlock: tokenFromBlock, toBlock: latestBlock });
-    i = 0;
-    adminstratorRemovedEvent.watch(function (error, result) {
-      console.log("RESULT: AdminstratorRemoved " + i++ + " #" + result.blockNumber + " " + JSON.stringify(result.args));
-    });
-    adminstratorRemovedEvent.stopWatching();
-
     var approvalEvents = contract.Approval({}, { fromBlock: tokenFromBlock, toBlock: latestBlock });
     i = 0;
     approvalEvents.watch(function (error, result) {
-      console.log("RESULT: Approval " + i++ + " #" + result.blockNumber + " owner=" + result.args.owner + " spender=" + result.args.spender + " value=" +
-        result.args.value.shift(-decimals));
+      console.log("RESULT: Approval " + i++ + " #" + result.blockNumber + " _owner=" + result.args._owner + " _spender=" + result.args._spender + " _value=" +
+        result.args._value.shift(-decimals));
     });
     approvalEvents.stopWatching();
 
     var transferEvents = contract.Transfer({}, { fromBlock: tokenFromBlock, toBlock: latestBlock });
     i = 0;
     transferEvents.watch(function (error, result) {
-      console.log("RESULT: Transfer " + i++ + " #" + result.blockNumber + ": from=" + result.args.from + " to=" + result.args.to +
-        " value=" + result.args.value.shift(-decimals));
+      console.log("RESULT: Transfer " + i++ + " #" + result.blockNumber + ": _from=" + result.args._from + " _to=" + result.args._to +
+        " _value=" + result.args._value.shift(-decimals));
     });
     transferEvents.stopWatching();
 

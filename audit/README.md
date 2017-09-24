@@ -224,6 +224,8 @@ For an example, see [test/modifiedContracts/SnipCoin.sol](test/modifiedContracts
 * **LOW IMPORTANCE** Consider making `contractOwner`, `accountWithUpdatePermissions` and `DECIMALS_MULTIPLIER` public to allow for easier
   validation
 
+* **LOW IMPORTANCE** Consider disabling `transfer(...)` and `transferFrom(...)` while the sale is in progress
+
 <br />
 
 <hr />
