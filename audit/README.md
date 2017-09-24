@@ -14,8 +14,9 @@ Bok Consulting Pty Ltd was commissioned to perform an audit on the Ethereum smar
 This audit has been conducted on Snip's source code in commits
 [547c295](https://github.com/SnipToday/SnipCoin/commit/547c295895700ce44ab5d63cab506978e2f01634),
 [022fbf8](https://github.com/SnipToday/SnipCoin/commit/022fbf8f901cba0dcffe8121f97580bfdcc2ba0b),
-[f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43) and
-[94ffa4d](https://github.com/SnipToday/SnipCoin/commit/94ffa4d4a3750c0cf584ac63a1df464dd4d6c3dc).
+[f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43),
+[94ffa4d](https://github.com/SnipToday/SnipCoin/commit/94ffa4d4a3750c0cf584ac63a1df464dd4d6c3dc) and
+[07a5991](https://github.com/SnipToday/SnipCoin/commit/07a5991327b7c26e040e319aa67205ff96697a7d).
 
 No potential vulnerabilities have been identified in the crowdsale and token contract.
 
@@ -314,6 +315,8 @@ For an example, see [test/modifiedContracts/SnipCoin_secondreview_example.sol](t
 
 * **LOW IMPORTANCE** `getBalance(...)` is exact duplicate of the ERC20 standard function `balanceOf(...)`
 
+  * [x] Fixed in [07a5991](https://github.com/SnipToday/SnipCoin/commit/07a5991327b7c26e040e319aa67205ff96697a7d)
+
 * **LOW IMPORTANCE** Some of the recent tokens have a requirement that a non-0 approval amount must be set to 0 before being able to set it
   to a new non-0 approval amount. See [GimliToken.sol](https://github.com/bokkypoobah/GimliTokenContractAudit/blob/master/sol/GimliToken.sol#L79-L83_
   for an example, including the linked comment
@@ -323,6 +326,8 @@ For an example, see [test/modifiedContracts/SnipCoin_secondreview_example.sol](t
 
 * **LOW IMPORTANCE** The whitelisted cap amount applies to each transaction and not a participant's total contributions. Consider whether
   the cap amount should be applied to a participant's total contribution or to each individual transaction
+
+  * [ ] CHECK - Fixed in [07a5991](https://github.com/SnipToday/SnipCoin/commit/07a5991327b7c26e040e319aa67205ff96697a7d)?
 
 <br />
 
@@ -399,6 +404,21 @@ in [test/test1results.txt](test/test1results.txt) and the detailed output saved 
 * [x] Close crowdsale
 * [x] Enable transfers
 * [x] `transfer(...)` and `transferFrom(...)` the *SNIP* tokens
+
+The following functions were tested using the script [test/02_test2.sh](test/02_test2.sh) with the summary results saved
+in [test/test2results.txt](test/test2results.txt) and the detailed output saved in [test/test2output.txt](test/test2output.txt):
+
+* [x] Deploy Crowdsale/Token contract
+* [x] Add accounts to capped and uncapped whitelists
+* [x] Open crowdsale
+* [x] Contribute to just below the 8m USD cap
+* [x] Contribute to just above the 8m USD cap - contribution rejected
+* [x] Contribute to the 8m USD cap
+* [x] Close crowdsale
+* [x] Enable transfers
+* [x] `transfer(...)` the *SNIP* tokens
+
+<br />
 
 <br />
 

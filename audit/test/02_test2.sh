@@ -18,8 +18,8 @@ CROWDSALEJS=`grep ^CROWDSALEJS= settings.txt | sed "s/^.*=//"`
 DEPLOYMENTDATA=`grep ^DEPLOYMENTDATA= settings.txt | sed "s/^.*=//"`
 
 INCLUDEJS=`grep ^INCLUDEJS= settings.txt | sed "s/^.*=//"`
-TEST1OUTPUT=`grep ^TEST1OUTPUT= settings.txt | sed "s/^.*=//"`
-TEST1RESULTS=`grep ^TEST1RESULTS= settings.txt | sed "s/^.*=//"`
+TEST2OUTPUT=`grep ^TEST2OUTPUT= settings.txt | sed "s/^.*=//"`
+TEST2RESULTS=`grep ^TEST2RESULTS= settings.txt | sed "s/^.*=//"`
 
 CURRENTTIME=`date +%s`
 CURRENTTIMES=`date -r $CURRENTTIME -u`
@@ -37,19 +37,19 @@ STARTTIME_S=`date -r $STARTTIME -u`
 ENDTIME=`echo "$CURRENTTIME+60*3" | bc`
 ENDTIME_S=`date -r $ENDTIME -u`
 
-printf "MODE            = '$MODE'\n" | tee $TEST1OUTPUT
-printf "GETHATTACHPOINT = '$GETHATTACHPOINT'\n" | tee -a $TEST1OUTPUT
-printf "PASSWORD        = '$PASSWORD'\n" | tee -a $TEST1OUTPUT
-printf "SOURCEDIR       = '$SOURCEDIR'\n" | tee -a $TEST1OUTPUT
-printf "CROWDSALESOL    = '$CROWDSALESOL'\n" | tee -a $TEST1OUTPUT
-printf "CROWDSALEJS     = '$CROWDSALEJS'\n" | tee -a $TEST1OUTPUT
-printf "DEPLOYMENTDATA  = '$DEPLOYMENTDATA'\n" | tee -a $TEST1OUTPUT
-printf "INCLUDEJS       = '$INCLUDEJS'\n" | tee -a $TEST1OUTPUT
-printf "TEST1OUTPUT     = '$TEST1OUTPUT'\n" | tee -a $TEST1OUTPUT
-printf "TEST1RESULTS    = '$TEST1RESULTS'\n" | tee -a $TEST1OUTPUT
-printf "CURRENTTIME     = '$CURRENTTIME' '$CURRENTTIMES'\n" | tee -a $TEST1OUTPUT
-printf "STARTTIME       = '$STARTTIME' '$STARTTIME_S'\n" | tee -a $TEST1OUTPUT
-printf "ENDTIME         = '$ENDTIME' '$ENDTIME_S'\n" | tee -a $TEST1OUTPUT
+printf "MODE            = '$MODE'\n" | tee $TEST2OUTPUT
+printf "GETHATTACHPOINT = '$GETHATTACHPOINT'\n" | tee -a $TEST2OUTPUT
+printf "PASSWORD        = '$PASSWORD'\n" | tee -a $TEST2OUTPUT
+printf "SOURCEDIR       = '$SOURCEDIR'\n" | tee -a $TEST2OUTPUT
+printf "CROWDSALESOL    = '$CROWDSALESOL'\n" | tee -a $TEST2OUTPUT
+printf "CROWDSALEJS     = '$CROWDSALEJS'\n" | tee -a $TEST2OUTPUT
+printf "DEPLOYMENTDATA  = '$DEPLOYMENTDATA'\n" | tee -a $TEST2OUTPUT
+printf "INCLUDEJS       = '$INCLUDEJS'\n" | tee -a $TEST2OUTPUT
+printf "TEST2OUTPUT     = '$TEST2OUTPUT'\n" | tee -a $TEST2OUTPUT
+printf "TEST2RESULTS    = '$TEST2RESULTS'\n" | tee -a $TEST2OUTPUT
+printf "CURRENTTIME     = '$CURRENTTIME' '$CURRENTTIMES'\n" | tee -a $TEST2OUTPUT
+printf "STARTTIME       = '$STARTTIME' '$STARTTIME_S'\n" | tee -a $TEST2OUTPUT
+printf "ENDTIME         = '$ENDTIME' '$ENDTIME_S'\n" | tee -a $TEST2OUTPUT
 
 # Make copy of SOL file and modify start and end times ---
 # `cp modifiedContracts/SnipCoin.sol .`
@@ -64,12 +64,12 @@ printf "ENDTIME         = '$ENDTIME' '$ENDTIME_S'\n" | tee -a $TEST1OUTPUT
 # `perl -pi -e "s/VESTING_2_DATE = 1568808000;.*$/VESTING_2_DATE \= $VESTING2TIME; \/\/ $VESTING2TIME_S/" GimliCrowdsale.sol`
 
 DIFFS1=`diff $SOURCEDIR/$CROWDSALESOL $CROWDSALESOL`
-echo "--- Differences $SOURCEDIR/$CROWDSALESOL $CROWDSALESOL ---" | tee -a $TEST1OUTPUT
-echo "$DIFFS1" | tee -a $TEST1OUTPUT
+echo "--- Differences $SOURCEDIR/$CROWDSALESOL $CROWDSALESOL ---" | tee -a $TEST2OUTPUT
+echo "$DIFFS1" | tee -a $TEST2OUTPUT
 
 echo "var tokenOutput=`solc --optimize --combined-json abi,bin,interface $CROWDSALESOL`;" > $CROWDSALEJS
 
-geth --verbosity 3 attach $GETHATTACHPOINT << EOF | tee -a $TEST1OUTPUT
+geth --verbosity 3 attach $GETHATTACHPOINT << EOF | tee -a $TEST2OUTPUT
 loadScript("$CROWDSALEJS");
 loadScript("functions.js");
 
@@ -136,20 +136,6 @@ console.log("RESULT: ");
 
 
 // -----------------------------------------------------------------------------
-var sendContribution1Message = "Send Contribution Before Start";
-// -----------------------------------------------------------------------------
-console.log("RESULT: " + sendContribution1Message);
-var sendContribution1Tx = eth.sendTransaction({from: account3, to: tokenAddress, gas: 400000, value: web3.toWei("1", "ether")});
-while (txpool.status.pending > 0) {
-}
-printTxData("sendContribution1Tx", sendContribution1Tx);
-printBalances();
-passIfGasEqualsGasUsed(sendContribution1Tx, sendContribution1Message + " - ac3 1 ETH - Expecting Failure");
-printTokenContractDetails();
-console.log("RESULT: ");
-
-
-// -----------------------------------------------------------------------------
 var openSaleMessage = "Open Sale";
 // -----------------------------------------------------------------------------
 console.log("RESULT: " + openSaleMessage);
@@ -164,49 +150,43 @@ console.log("RESULT: ");
 
 
 // -----------------------------------------------------------------------------
-var sendContribution2Message = "Send Contribution After Start";
+var sendContribution2Message = "Contribute Below USD Cap";
 // -----------------------------------------------------------------------------
 console.log("RESULT: " + sendContribution2Message);
-var sendContribution2Tx = eth.sendTransaction({from: account3, to: tokenAddress, gas: 400000, value: web3.toWei("1", "ether")});
+var sendContribution2Tx = eth.sendTransaction({from: account3, to: tokenAddress, gas: 400000, value: web3.toWei("14000", "ether")});
 while (txpool.status.pending > 0) {
 }
 printTxData("sendContribution2Tx", sendContribution2Tx);
 printBalances();
-failIfGasEqualsGasUsed(sendContribution2Tx, sendContribution2Message + " - ac3 1 ETH = 300,000 SNIP");
+failIfGasEqualsGasUsed(sendContribution2Tx, sendContribution2Message + " - ac3 14,000 ETH = 3,990,000 USD = 4,200,000,000 SNIP");
 printTokenContractDetails();
 console.log("RESULT: ");
 
 
 // -----------------------------------------------------------------------------
-var sendContribution3Message = "Send Contribution After Start - Past Cap";
+var sendContribution2Message = "Contribute Above USD Cap";
 // -----------------------------------------------------------------------------
-console.log("RESULT: " + sendContribution3Message);
-var sendContribution3_aTx = eth.sendTransaction({from: account3, to: tokenAddress, gas: 400000, value: web3.toWei("100", "ether")});
-var sendContribution3_bTx = eth.sendTransaction({from: account4, to: tokenAddress, gas: 400000, value: web3.toWei("100", "ether")});
+console.log("RESULT: " + sendContribution2Message);
+var sendContribution2Tx = eth.sendTransaction({from: account3, to: tokenAddress, gas: 400000, value: web3.toWei("100", "ether")});
 while (txpool.status.pending > 0) {
 }
-printTxData("sendContribution3_aTx", sendContribution3_aTx);
-printTxData("sendContribution3_bTx", sendContribution3_bTx);
+printTxData("sendContribution2Tx", sendContribution2Tx);
 printBalances();
-failIfGasEqualsGasUsed(sendContribution3_aTx, sendContribution3Message + " - ac3 100 ETH - 30,000,000");
-passIfGasEqualsGasUsed(sendContribution3_bTx, sendContribution3Message + " - ac4 100 ETH - Fail");
+passIfGasEqualsGasUsed(sendContribution2Tx, sendContribution2Message + " - ac3 100 ETH = 28,500 USD = 30,000,000 SNIP - Rejected");
 printTokenContractDetails();
 console.log("RESULT: ");
 
 
 // -----------------------------------------------------------------------------
-var sendContribution4Message = "Send Contribution After Start - Below Cap";
+var sendContribution2Message = "Contribute To USD Cap";
 // -----------------------------------------------------------------------------
-console.log("RESULT: " + sendContribution4Message);
-var sendContribution4_aTx = eth.sendTransaction({from: account3, to: tokenAddress, gas: 400000, value: web3.toWei("10", "ether")});
-var sendContribution4_bTx = eth.sendTransaction({from: account4, to: tokenAddress, gas: 400000, value: web3.toWei("10", "ether")});
+console.log("RESULT: " + sendContribution2Message);
+var sendContribution2Tx = eth.sendTransaction({from: account3, to: tokenAddress, gas: 400000, value: web3.toWei("35.0877193", "ether")});
 while (txpool.status.pending > 0) {
 }
-printTxData("sendContribution4_aTx", sendContribution4_aTx);
-printTxData("sendContribution4_bTx", sendContribution4_bTx);
+printTxData("sendContribution2Tx", sendContribution2Tx);
 printBalances();
-failIfGasEqualsGasUsed(sendContribution4_aTx, sendContribution4Message + " - ac3 10 ETH - 3,000,000");
-failIfGasEqualsGasUsed(sendContribution4_bTx, sendContribution4Message + " - ac4 10 ETH - 3,000,000");
+failIfGasEqualsGasUsed(sendContribution2Tx, sendContribution2Message + " - ac3 35.0877193 ETH = 10,000.0000005 USD = 10,526,315.79 SNIP");
 printTokenContractDetails();
 console.log("RESULT: ");
 
@@ -244,25 +224,17 @@ var moveTokenMessage = "Move Tokens After Transfers Allowed";
 // -----------------------------------------------------------------------------
 console.log("RESULT: " + moveTokenMessage);
 var moveToken1Tx = token.transfer(account5, "100000000000000000", {from: account3, gas: 100000});
-var moveToken2Tx = token.approve(account6,  "3000000000000000000", {from: account4, gas: 100000});
-while (txpool.status.pending > 0) {
-}
-var moveToken3Tx = token.transferFrom(account4, account7, "3000000000000000000", {from: account6, gas: 100000});
 while (txpool.status.pending > 0) {
 }
 printTxData("moveToken1Tx", moveToken1Tx);
-printTxData("moveToken2Tx", moveToken2Tx);
-printTxData("moveToken3Tx", moveToken3Tx);
 printBalances();
 failIfGasEqualsGasUsed(moveToken1Tx, moveTokenMessage + " - transfer 0.1 SNIP ac3 -> ac5. CHECK for movement");
-failIfGasEqualsGasUsed(moveToken2Tx, moveTokenMessage + " - approve 3 SNIP ac4 -> ac6");
-failIfGasEqualsGasUsed(moveToken3Tx, moveTokenMessage + " - transferFrom 3 SNIP ac4 -> ac7 by ac6. CHECK for movement");
 printTokenContractDetails();
 console.log("RESULT: ");
 
 
 EOF
-grep "DATA: " $TEST1OUTPUT | sed "s/DATA: //" > $DEPLOYMENTDATA
+grep "DATA: " $TEST2OUTPUT | sed "s/DATA: //" > $DEPLOYMENTDATA
 cat $DEPLOYMENTDATA
-grep "RESULT: " $TEST1OUTPUT | sed "s/RESULT: //" > $TEST1RESULTS
-cat $TEST1RESULTS
+grep "RESULT: " $TEST2OUTPUT | sed "s/RESULT: //" > $TEST2RESULTS
+cat $TEST2RESULTS
