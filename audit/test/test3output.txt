@@ -8,16 +8,16 @@ DEPLOYMENTDATA  = 'deploymentData.txt'
 INCLUDEJS       = './include.js'
 TEST3OUTPUT     = 'test3output.txt'
 TEST3RESULTS    = 'test3results.txt'
-CURRENTTIME     = '1506271990' 'Sun 24 Sep 2017 16:53:10 UTC'
-STARTTIME       = '1506272080' 'Sun 24 Sep 2017 16:54:40 UTC'
-ENDTIME         = '1506272170' 'Sun 24 Sep 2017 16:56:10 UTC'
+CURRENTTIME     = '1506273333' 'Sun 24 Sep 2017 17:15:33 UTC'
+STARTTIME       = '1506273423' 'Sun 24 Sep 2017 17:17:03 UTC'
+ENDTIME         = '1506273513' 'Sun 24 Sep 2017 17:18:33 UTC'
 --- Differences ../../contracts/SnipCoin.sol SnipCoin.sol ---
 
 Welcome to the Geth JavaScript console!
 
 instance: Geth/v1.7.0-stable-6c6c7b2a/darwin-amd64/go1.7.1
 coinbase: 0xa00af22d07c87d96eeeb0ed583f8f6ac7812827e
-at block: 1841 (Mon, 25 Sep 2017 02:53:07 AEST)
+at block: 71 (Mon, 25 Sep 2017 03:15:28 AEST)
  datadir: /Users/bok/Projects/SnipCoinTokenContractAudit/audit/test/testchain
  modules: admin:1.0 debug:1.0 eth:1.0 miner:1.0 net:1.0 personal:1.0 rpc:1.0 txpool:1.0 web3:1.0
 
@@ -41,7 +41,7 @@ undefined
 > 
 RESULT:  # Account                                             EtherBalanceChange                          Token Name
 RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
-RESULT:  0 0xa00af22d07c87d96eeeb0ed583f8f6ac7812827e       10.000000000000000000           0.00000000 Account #0 - Miner
+RESULT:  0 0xa00af22d07c87d96eeeb0ed583f8f6ac7812827e       40.000000000000000000           0.00000000 Account #0 - Miner
 RESULT:  1 0xa11aae29840fbb5c86e6fd4cf809eba183aef433        0.000000000000000000           0.00000000 Account #1 - Contract Owner
 RESULT:  2 0xa22ab8a9d641ce77e06d98b7d7065d324d3d6976        0.000000000000000000           0.00000000 Account #2 - Wallet
 RESULT:  3 0xa33a6c312d9ad0e0f2e95541beed0cc081621fd0        0.000000000000000000           0.00000000 Account #3 - Uncapped
@@ -102,14 +102,14 @@ undefined
 undefined
 > 
 > 
-DATA: tokenAddress=0x1d82a66b23c73f4e45a813962eb01e5dd680aafa
-RESULT: tokenAddress=0x1d82a66b23c73f4e45a813962eb01e5dd680aafa gas=6000000 gasUsed=1453611 costETH=0.026164998 costUSD=9.95290358922 @ ETH/USD=380.39 gasPrice=18000000000 block=1845 txIx=0 txId=0xd51d2ce8424ef24051842cb219cdca34eae90f18d27192a260266d10d32412b8
+DATA: tokenAddress=0xa83b361b5b868fc289d586c3a1d3712d8075d8f8
+RESULT: tokenAddress=0xa83b361b5b868fc289d586c3a1d3712d8075d8f8 gas=6000000 gasUsed=1564008 costETH=0.028152144 costUSD=10.70879405616 @ ETH/USD=380.39 gasPrice=18000000000 block=82 txIx=0 txId=0x50e30da6c481af6c5f320378096d09a8e9f2fe80f727341cd141caa669f71c58
 undefined
 > 
 RESULT:  # Account                                             EtherBalanceChange                          Token Name
 RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
-RESULT:  0 0xa00af22d07c87d96eeeb0ed583f8f6ac7812827e       20.026164998000000000           0.000000000000000000 Account #0 - Miner
-RESULT:  1 0xa11aae29840fbb5c86e6fd4cf809eba183aef433       -0.026164998000000000 10000000000.000000000000000000 Account #1 - Contract Owner
+RESULT:  0 0xa00af22d07c87d96eeeb0ed583f8f6ac7812827e       55.028152144000000000           0.000000000000000000 Account #0 - Miner
+RESULT:  1 0xa11aae29840fbb5c86e6fd4cf809eba183aef433       -0.028152144000000000 10000000000.000000000000000000 Account #1 - Contract Owner
 RESULT:  2 0xa22ab8a9d641ce77e06d98b7d7065d324d3d6976        0.000000000000000000           0.000000000000000000 Account #2 - Wallet
 RESULT:  3 0xa33a6c312d9ad0e0f2e95541beed0cc081621fd0        0.000000000000000000           0.000000000000000000 Account #3 - Uncapped
 RESULT:  4 0xa44a08d3f6933c69212114bb66e2df1813651844        0.000000000000000000           0.000000000000000000 Account #4 - Capped
@@ -120,7 +120,7 @@ RESULT:  8 0xa88a05d2b88283ce84c8325760b72a64591279a2        0.00000000000000000
 RESULT:  9 0xa99a0ae3354c06b1459fd441a32a3f71005d7da0        0.000000000000000000           0.000000000000000000 Account #9
 RESULT: 10 0xaaaa9de1e6c564446ebca0fd102d8bd92093c756        0.000000000000000000           0.000000000000000000 Account #10
 RESULT: 11 0x686f152daD6490DF93B267E319f875A684Bd26e2        0.000000000000000000           0.000000000000000000 Crowdsale Wallet
-RESULT: 12 0x1d82a66b23c73f4e45a813962eb01e5dd680aafa        0.000000000000000000           0.000000000000000000 Token 'SNIP' 'SnipCoin'
+RESULT: 12 0xa83b361b5b868fc289d586c3a1d3712d8075d8f8        0.000000000000000000           0.000000000000000000 Token 'SNIP' 'SnipCoin'
 RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
 RESULT:                                                                           10000000000.000000000000000000 Total Token Balances
 RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
@@ -130,7 +130,7 @@ undefined
 RESULT: PASS Deploy Crowdsale/Token Contract
 1
 > 
-RESULT: tokenContractAddress=0x1d82a66b23c73f4e45a813962eb01e5dd680aafa
+RESULT: tokenContractAddress=0xa83b361b5b868fc289d586c3a1d3712d8075d8f8
 RESULT: token.totalSupply=10000000000
 RESULT: token.name=SnipCoin
 RESULT: token.symbol=SNIP
@@ -150,7 +150,7 @@ RESULT: token.SALE_CAP_IN_USD=8000000
 RESULT: token.MINIMUM_PURCHASE_IN_USD=50
 RESULT: token.USD_PURCHASE_AMOUNT_REQUIRING_ID=4500
 RESULT: token.getWeiToUsdExchangeRate=3508771929824561
-RESULT: Transfer 0 #1845: _from=0x0000000000000000000000000000000000000000 _to=0xa11aae29840fbb5c86e6fd4cf809eba183aef433 _value=10000000000
+RESULT: Transfer 0 #82: _from=0x0000000000000000000000000000000000000000 _to=0xa11aae29840fbb5c86e6fd4cf809eba183aef433 _value=10000000000
 undefined
 > 
 RESULT: 
@@ -174,16 +174,16 @@ undefined
 ... 
 undefined
 > 
-RESULT: whitelist1Tx gas=400000 gasUsed=43739 costETH=0.000787302 costUSD=0.29948180778 @ ETH/USD=380.39 gasPrice=18000000000 block=1848 txIx=0 txId=0xded354fa8fa45338ffa60d73fc2a474406a32510ff62ad652acee8b9f0025693
+RESULT: whitelist1Tx gas=400000 gasUsed=43783 costETH=0.000788094 costUSD=0.29978307666 @ ETH/USD=380.39 gasPrice=18000000000 block=85 txIx=0 txId=0x99af274e50fd1ca693c8e55b334911da458f612370bd8c2f62d0320c97fb31ba
 undefined
 > 
-RESULT: whitelist2Tx gas=400000 gasUsed=43630 costETH=0.00078534 costUSD=0.2987354826 @ ETH/USD=380.39 gasPrice=18000000000 block=1848 txIx=1 txId=0x352a1bfc5e337303ebd694e87cb2b186685a0c6efa7de386869e088b8143946c
+RESULT: whitelist2Tx gas=400000 gasUsed=43674 costETH=0.000786132 costUSD=0.29903675148 @ ETH/USD=380.39 gasPrice=18000000000 block=85 txIx=1 txId=0xfa6b0abffd9da03334b2d1050c4a0df27c247b96b0662cd0337c1e6f13c1dc7a
 undefined
 > 
 RESULT:  # Account                                             EtherBalanceChange                          Token Name
 RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
-RESULT:  0 0xa00af22d07c87d96eeeb0ed583f8f6ac7812827e       35.027737640000000000           0.000000000000000000 Account #0 - Miner
-RESULT:  1 0xa11aae29840fbb5c86e6fd4cf809eba183aef433       -0.027737640000000000 10000000000.000000000000000000 Account #1 - Contract Owner
+RESULT:  0 0xa00af22d07c87d96eeeb0ed583f8f6ac7812827e       70.029726370000000000           0.000000000000000000 Account #0 - Miner
+RESULT:  1 0xa11aae29840fbb5c86e6fd4cf809eba183aef433       -0.029726370000000000 10000000000.000000000000000000 Account #1 - Contract Owner
 RESULT:  2 0xa22ab8a9d641ce77e06d98b7d7065d324d3d6976        0.000000000000000000           0.000000000000000000 Account #2 - Wallet
 RESULT:  3 0xa33a6c312d9ad0e0f2e95541beed0cc081621fd0        0.000000000000000000           0.000000000000000000 Account #3 - Uncapped
 RESULT:  4 0xa44a08d3f6933c69212114bb66e2df1813651844        0.000000000000000000           0.000000000000000000 Account #4 - Capped
@@ -194,7 +194,7 @@ RESULT:  8 0xa88a05d2b88283ce84c8325760b72a64591279a2        0.00000000000000000
 RESULT:  9 0xa99a0ae3354c06b1459fd441a32a3f71005d7da0        0.000000000000000000           0.000000000000000000 Account #9
 RESULT: 10 0xaaaa9de1e6c564446ebca0fd102d8bd92093c756        0.000000000000000000           0.000000000000000000 Account #10
 RESULT: 11 0x686f152daD6490DF93B267E319f875A684Bd26e2        0.000000000000000000           0.000000000000000000 Crowdsale Wallet
-RESULT: 12 0x1d82a66b23c73f4e45a813962eb01e5dd680aafa        0.000000000000000000           0.000000000000000000 Token 'SNIP' 'SnipCoin'
+RESULT: 12 0xa83b361b5b868fc289d586c3a1d3712d8075d8f8        0.000000000000000000           0.000000000000000000 Token 'SNIP' 'SnipCoin'
 RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
 RESULT:                                                                           10000000000.000000000000000000 Total Token Balances
 RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
@@ -207,7 +207,7 @@ RESULT: PASS Whitelist - ac3 Whitelist Uncapped
 RESULT: PASS Whitelist - ac4 Whitelist Capped
 1
 > 
-RESULT: tokenContractAddress=0x1d82a66b23c73f4e45a813962eb01e5dd680aafa
+RESULT: tokenContractAddress=0xa83b361b5b868fc289d586c3a1d3712d8075d8f8
 RESULT: token.totalSupply=10000000000
 RESULT: token.name=SnipCoin
 RESULT: token.symbol=SNIP
@@ -248,13 +248,13 @@ undefined
 ... 
 undefined
 > 
-RESULT: openSaleTx gas=400000 gasUsed=42527 costETH=0.000765486 costUSD=0.29118321954 @ ETH/USD=380.39 gasPrice=18000000000 block=1850 txIx=0 txId=0xf5c8076bd522a80ed9d67de1bf1a4a9c76737da80747ff4b7de6f3508ae80f77
+RESULT: openSaleTx gas=400000 gasUsed=42571 costETH=0.000766278 costUSD=0.29148448842 @ ETH/USD=380.39 gasPrice=18000000000 block=89 txIx=0 txId=0x3106bb27f296c3855412b700909f00c1533b4ccb9ac6de410e4cc24f15bb9df0
 undefined
 > 
 RESULT:  # Account                                             EtherBalanceChange                          Token Name
 RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
-RESULT:  0 0xa00af22d07c87d96eeeb0ed583f8f6ac7812827e       45.028503126000000000           0.000000000000000000 Account #0 - Miner
-RESULT:  1 0xa11aae29840fbb5c86e6fd4cf809eba183aef433       -0.028503126000000000 10000000000.000000000000000000 Account #1 - Contract Owner
+RESULT:  0 0xa00af22d07c87d96eeeb0ed583f8f6ac7812827e       90.030492648000000000           0.000000000000000000 Account #0 - Miner
+RESULT:  1 0xa11aae29840fbb5c86e6fd4cf809eba183aef433       -0.030492648000000000 10000000000.000000000000000000 Account #1 - Contract Owner
 RESULT:  2 0xa22ab8a9d641ce77e06d98b7d7065d324d3d6976        0.000000000000000000           0.000000000000000000 Account #2 - Wallet
 RESULT:  3 0xa33a6c312d9ad0e0f2e95541beed0cc081621fd0        0.000000000000000000           0.000000000000000000 Account #3 - Uncapped
 RESULT:  4 0xa44a08d3f6933c69212114bb66e2df1813651844        0.000000000000000000           0.000000000000000000 Account #4 - Capped
@@ -265,7 +265,7 @@ RESULT:  8 0xa88a05d2b88283ce84c8325760b72a64591279a2        0.00000000000000000
 RESULT:  9 0xa99a0ae3354c06b1459fd441a32a3f71005d7da0        0.000000000000000000           0.000000000000000000 Account #9
 RESULT: 10 0xaaaa9de1e6c564446ebca0fd102d8bd92093c756        0.000000000000000000           0.000000000000000000 Account #10
 RESULT: 11 0x686f152daD6490DF93B267E319f875A684Bd26e2        0.000000000000000000           0.000000000000000000 Crowdsale Wallet
-RESULT: 12 0x1d82a66b23c73f4e45a813962eb01e5dd680aafa        0.000000000000000000           0.000000000000000000 Token 'SNIP' 'SnipCoin'
+RESULT: 12 0xa83b361b5b868fc289d586c3a1d3712d8075d8f8        0.000000000000000000           0.000000000000000000 Token 'SNIP' 'SnipCoin'
 RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
 RESULT:                                                                           10000000000.000000000000000000 Total Token Balances
 RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
@@ -275,7 +275,7 @@ undefined
 RESULT: PASS Open Sale
 1
 > 
-RESULT: tokenContractAddress=0x1d82a66b23c73f4e45a813962eb01e5dd680aafa
+RESULT: tokenContractAddress=0xa83b361b5b868fc289d586c3a1d3712d8075d8f8
 RESULT: token.totalSupply=10000000000
 RESULT: token.name=SnipCoin
 RESULT: token.symbol=SNIP
@@ -316,13 +316,13 @@ undefined
 ... 
 undefined
 > 
-RESULT: sendContribution2Tx gas=400000 gasUsed=71913 costETH=0.001294434 costUSD=0.49238974926 @ ETH/USD=380.39 gasPrice=18000000000 block=1852 txIx=0 txId=0xada613e779977d094127bb418604f0b22365e974736f230fb3f24c89af34235e
+RESULT: sendContribution2Tx gas=400000 gasUsed=71913 costETH=0.001294434 costUSD=0.49238974926 @ ETH/USD=380.39 gasPrice=18000000000 block=93 txIx=0 txId=0xbeca9ff7e146863ba761b9eac099651cc3689d224c077589d5a5268a912af4f4
 undefined
 > 
 RESULT:  # Account                                             EtherBalanceChange                          Token Name
 RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
-RESULT:  0 0xa00af22d07c87d96eeeb0ed583f8f6ac7812827e       55.029797560000000000           0.000000000000000000 Account #0 - Miner
-RESULT:  1 0xa11aae29840fbb5c86e6fd4cf809eba183aef433       -0.028503126000000000  9997000000.000000000000000000 Account #1 - Contract Owner
+RESULT:  0 0xa00af22d07c87d96eeeb0ed583f8f6ac7812827e      110.031787082000000000           0.000000000000000000 Account #0 - Miner
+RESULT:  1 0xa11aae29840fbb5c86e6fd4cf809eba183aef433       -0.030492648000000000  9997000000.000000000000000000 Account #1 - Contract Owner
 RESULT:  2 0xa22ab8a9d641ce77e06d98b7d7065d324d3d6976        0.000000000000000000           0.000000000000000000 Account #2 - Wallet
 RESULT:  3 0xa33a6c312d9ad0e0f2e95541beed0cc081621fd0        0.000000000000000000           0.000000000000000000 Account #3 - Uncapped
 RESULT:  4 0xa44a08d3f6933c69212114bb66e2df1813651844      -10.001294434000000000     3000000.000000000000000000 Account #4 - Capped
@@ -333,7 +333,7 @@ RESULT:  8 0xa88a05d2b88283ce84c8325760b72a64591279a2        0.00000000000000000
 RESULT:  9 0xa99a0ae3354c06b1459fd441a32a3f71005d7da0        0.000000000000000000           0.000000000000000000 Account #9
 RESULT: 10 0xaaaa9de1e6c564446ebca0fd102d8bd92093c756        0.000000000000000000           0.000000000000000000 Account #10
 RESULT: 11 0x686f152daD6490DF93B267E319f875A684Bd26e2       10.000000000000000000           0.000000000000000000 Crowdsale Wallet
-RESULT: 12 0x1d82a66b23c73f4e45a813962eb01e5dd680aafa        0.000000000000000000           0.000000000000000000 Token 'SNIP' 'SnipCoin'
+RESULT: 12 0xa83b361b5b868fc289d586c3a1d3712d8075d8f8        0.000000000000000000           0.000000000000000000 Token 'SNIP' 'SnipCoin'
 RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
 RESULT:                                                                           10000000000.000000000000000000 Total Token Balances
 RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
@@ -343,7 +343,7 @@ undefined
 RESULT: PASS Contribute Below Account Cap - ac4 10 ETH = 2,850 USD = 3,000,000 SNIP
 1
 > 
-RESULT: tokenContractAddress=0x1d82a66b23c73f4e45a813962eb01e5dd680aafa
+RESULT: tokenContractAddress=0xa83b361b5b868fc289d586c3a1d3712d8075d8f8
 RESULT: token.totalSupply=10000000000
 RESULT: token.name=SnipCoin
 RESULT: token.symbol=SNIP
@@ -363,7 +363,7 @@ RESULT: token.SALE_CAP_IN_USD=8000000
 RESULT: token.MINIMUM_PURCHASE_IN_USD=50
 RESULT: token.USD_PURCHASE_AMOUNT_REQUIRING_ID=4500
 RESULT: token.getWeiToUsdExchangeRate=3508771929824561
-RESULT: Transfer 0 #1852: _from=0xa11aae29840fbb5c86e6fd4cf809eba183aef433 _to=0xa44a08d3f6933c69212114bb66e2df1813651844 _value=3000000
+RESULT: Transfer 0 #93: _from=0xa11aae29840fbb5c86e6fd4cf809eba183aef433 _to=0xa44a08d3f6933c69212114bb66e2df1813651844 _value=3000000
 undefined
 > 
 RESULT: 
@@ -385,13 +385,13 @@ undefined
 ... 
 undefined
 > 
-RESULT: sendContribution2Tx gas=400000 gasUsed=400000 costETH=0.0072 costUSD=2.738808 @ ETH/USD=380.39 gasPrice=18000000000 block=1854 txIx=0 txId=0xce1dc605ff3bbbe511ff2743915c6fd5c169f23d1be02706c3a480066b30a569
+RESULT: sendContribution2Tx gas=400000 gasUsed=400000 costETH=0.0072 costUSD=2.738808 @ ETH/USD=380.39 gasPrice=18000000000 block=95 txIx=0 txId=0x743acf284ec1d5dbb9e869fb779c31801037f286407f6555fa40f4981b87a880
 undefined
 > 
 RESULT:  # Account                                             EtherBalanceChange                          Token Name
 RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
-RESULT:  0 0xa00af22d07c87d96eeeb0ed583f8f6ac7812827e       65.036997560000000000           0.000000000000000000 Account #0 - Miner
-RESULT:  1 0xa11aae29840fbb5c86e6fd4cf809eba183aef433       -0.028503126000000000  9997000000.000000000000000000 Account #1 - Contract Owner
+RESULT:  0 0xa00af22d07c87d96eeeb0ed583f8f6ac7812827e      120.038987082000000000           0.000000000000000000 Account #0 - Miner
+RESULT:  1 0xa11aae29840fbb5c86e6fd4cf809eba183aef433       -0.030492648000000000  9997000000.000000000000000000 Account #1 - Contract Owner
 RESULT:  2 0xa22ab8a9d641ce77e06d98b7d7065d324d3d6976        0.000000000000000000           0.000000000000000000 Account #2 - Wallet
 RESULT:  3 0xa33a6c312d9ad0e0f2e95541beed0cc081621fd0        0.000000000000000000           0.000000000000000000 Account #3 - Uncapped
 RESULT:  4 0xa44a08d3f6933c69212114bb66e2df1813651844      -10.008494434000000000     3000000.000000000000000000 Account #4 - Capped
@@ -402,7 +402,7 @@ RESULT:  8 0xa88a05d2b88283ce84c8325760b72a64591279a2        0.00000000000000000
 RESULT:  9 0xa99a0ae3354c06b1459fd441a32a3f71005d7da0        0.000000000000000000           0.000000000000000000 Account #9
 RESULT: 10 0xaaaa9de1e6c564446ebca0fd102d8bd92093c756        0.000000000000000000           0.000000000000000000 Account #10
 RESULT: 11 0x686f152daD6490DF93B267E319f875A684Bd26e2       10.000000000000000000           0.000000000000000000 Crowdsale Wallet
-RESULT: 12 0x1d82a66b23c73f4e45a813962eb01e5dd680aafa        0.000000000000000000           0.000000000000000000 Token 'SNIP' 'SnipCoin'
+RESULT: 12 0xa83b361b5b868fc289d586c3a1d3712d8075d8f8        0.000000000000000000           0.000000000000000000 Token 'SNIP' 'SnipCoin'
 RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
 RESULT:                                                                           10000000000.000000000000000000 Total Token Balances
 RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
@@ -412,7 +412,7 @@ undefined
 RESULT: PASS Contribute Above Account Cap - ac4 10 ETH = 2,850 USD = 3,000,000 SNIP - Rejected
 1
 > 
-RESULT: tokenContractAddress=0x1d82a66b23c73f4e45a813962eb01e5dd680aafa
+RESULT: tokenContractAddress=0xa83b361b5b868fc289d586c3a1d3712d8075d8f8
 RESULT: token.totalSupply=10000000000
 RESULT: token.name=SnipCoin
 RESULT: token.symbol=SNIP
@@ -453,13 +453,13 @@ undefined
 ... 
 undefined
 > 
-RESULT: sendContribution2Tx gas=400000 gasUsed=56913 costETH=0.001024434 costUSD=0.38968444926 @ ETH/USD=380.39 gasPrice=18000000000 block=1856 txIx=0 txId=0x777169ea6ee1289d088cfc2a2007a0f909cc304eaa14af3fb4b00dc030cc2c5f
+RESULT: sendContribution2Tx gas=400000 gasUsed=56913 costETH=0.001024434 costUSD=0.38968444926 @ ETH/USD=380.39 gasPrice=18000000000 block=97 txIx=0 txId=0xa534dc5c6dd982e281cfb1944be642f57f7bd0e2834c6105e3c1e90ce16f5ee9
 undefined
 > 
 RESULT:  # Account                                             EtherBalanceChange                          Token Name
 RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
-RESULT:  0 0xa00af22d07c87d96eeeb0ed583f8f6ac7812827e       75.038021994000000000           0.000000000000000000 Account #0 - Miner
-RESULT:  1 0xa11aae29840fbb5c86e6fd4cf809eba183aef433       -0.028503126000000000  9995264500.000000000000000000 Account #1 - Contract Owner
+RESULT:  0 0xa00af22d07c87d96eeeb0ed583f8f6ac7812827e      130.040011516000000000           0.000000000000000000 Account #0 - Miner
+RESULT:  1 0xa11aae29840fbb5c86e6fd4cf809eba183aef433       -0.030492648000000000  9995264500.000000000000000000 Account #1 - Contract Owner
 RESULT:  2 0xa22ab8a9d641ce77e06d98b7d7065d324d3d6976        0.000000000000000000           0.000000000000000000 Account #2 - Wallet
 RESULT:  3 0xa33a6c312d9ad0e0f2e95541beed0cc081621fd0        0.000000000000000000           0.000000000000000000 Account #3 - Uncapped
 RESULT:  4 0xa44a08d3f6933c69212114bb66e2df1813651844      -15.794518868000000000     4735500.000000000000000000 Account #4 - Capped
@@ -470,7 +470,7 @@ RESULT:  8 0xa88a05d2b88283ce84c8325760b72a64591279a2        0.00000000000000000
 RESULT:  9 0xa99a0ae3354c06b1459fd441a32a3f71005d7da0        0.000000000000000000           0.000000000000000000 Account #9
 RESULT: 10 0xaaaa9de1e6c564446ebca0fd102d8bd92093c756        0.000000000000000000           0.000000000000000000 Account #10
 RESULT: 11 0x686f152daD6490DF93B267E319f875A684Bd26e2       15.785000000000000000           0.000000000000000000 Crowdsale Wallet
-RESULT: 12 0x1d82a66b23c73f4e45a813962eb01e5dd680aafa        0.000000000000000000           0.000000000000000000 Token 'SNIP' 'SnipCoin'
+RESULT: 12 0xa83b361b5b868fc289d586c3a1d3712d8075d8f8        0.000000000000000000           0.000000000000000000 Token 'SNIP' 'SnipCoin'
 RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
 RESULT:                                                                           10000000000.000000000000000000 Total Token Balances
 RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
@@ -480,7 +480,7 @@ undefined
 RESULT: PASS Contribute At Account Cap - ac4 5.785 ETH = 1,648.725 USD = 1,735,500 SNIP
 1
 > 
-RESULT: tokenContractAddress=0x1d82a66b23c73f4e45a813962eb01e5dd680aafa
+RESULT: tokenContractAddress=0xa83b361b5b868fc289d586c3a1d3712d8075d8f8
 RESULT: token.totalSupply=10000000000
 RESULT: token.name=SnipCoin
 RESULT: token.symbol=SNIP
@@ -500,7 +500,7 @@ RESULT: token.SALE_CAP_IN_USD=8000000
 RESULT: token.MINIMUM_PURCHASE_IN_USD=50
 RESULT: token.USD_PURCHASE_AMOUNT_REQUIRING_ID=4500
 RESULT: token.getWeiToUsdExchangeRate=3508771929824561
-RESULT: Transfer 0 #1856: _from=0xa11aae29840fbb5c86e6fd4cf809eba183aef433 _to=0xa44a08d3f6933c69212114bb66e2df1813651844 _value=1735500
+RESULT: Transfer 0 #97: _from=0xa11aae29840fbb5c86e6fd4cf809eba183aef433 _to=0xa44a08d3f6933c69212114bb66e2df1813651844 _value=1735500
 undefined
 > 
 RESULT: 
