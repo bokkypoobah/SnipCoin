@@ -1,6 +1,6 @@
 # SnipCoin Token Contract Audit
 
-Status: There are a few outstanding low importance changes that were recommended and are being considered.
+Status: There are a few outstanding low importance optional changes that were recommended and are being considered.
 
 <br />
 
@@ -16,8 +16,9 @@ This audit has been conducted on Snip's source code in commits
 [022fbf8](https://github.com/SnipToday/SnipCoin/commit/022fbf8f901cba0dcffe8121f97580bfdcc2ba0b),
 [f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43),
 [94ffa4d](https://github.com/SnipToday/SnipCoin/commit/94ffa4d4a3750c0cf584ac63a1df464dd4d6c3dc),
-[07a5991](https://github.com/SnipToday/SnipCoin/commit/07a5991327b7c26e040e319aa67205ff96697a7d) and
-[a5c4d0d](https://github.com/SnipToday/SnipCoin/commit/a5c4d0d32dcfeb9aa120a208c4ba285fdacabe60).
+[07a5991](https://github.com/SnipToday/SnipCoin/commit/07a5991327b7c26e040e319aa67205ff96697a7d),
+[a5c4d0d](https://github.com/SnipToday/SnipCoin/commit/a5c4d0d32dcfeb9aa120a208c4ba285fdacabe60) and
+[4cda853](https://github.com/SnipToday/SnipCoin/commit/4cda85368a553832b01e16ebfcff43c816ed6b02).
 
 No potential vulnerabilities have been identified in the crowdsale and token contract.
 
@@ -331,16 +332,18 @@ For an example, see [test/modifiedContracts/SnipCoin_secondreview_example.sol](t
 
   * [x] Fixed in [07a5991](https://github.com/SnipToday/SnipCoin/commit/07a5991327b7c26e040e319aa67205ff96697a7d)
 
+* **LOW IMPORTANCE** `saleWalletAddress.transfer(msg.value);` should be the last statement in `function ()`. This is not very
+  important as `saleWalletAddress` is under the control of the crowdsale administrator. But if the destination of this ETH transfer
+  is a participants wallet, the program control flow can be hijacked
+
+  * [x] Fixed in [4cda853](https://github.com/SnipToday/SnipCoin/commit/4cda85368a553832b01e16ebfcff43c816ed6b02)
+
 * **LOW IMPORTANCE** Some of the recent tokens have a requirement that a non-0 approval amount must be set to 0 before being able to set it
   to a new non-0 approval amount. See [GimliToken.sol](https://github.com/bokkypoobah/GimliTokenContractAudit/blob/master/sol/GimliToken.sol#L79-L83)
   for an example, including the linked comment
   
 * **LOW IMPORTANCE** The `transfer(...)` and `transferFrom(...)` return a false if the transfer fails. Some of the newer tokens throw
   an error instead of returning false - search for "throw" in the [ERC20 standard](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md)
-
-* **LOW IMPORTANCE** `saleWalletAddress.transfer(msg.value);` should be the last statement in `function ()`. This is not very
-  important as `saleWalletAddress` is under the control of the crowdsale administrator. But if the destination of this ETH transfer
-  is a participants wallet, the program control flow can be hijacked
 
 <br />
 

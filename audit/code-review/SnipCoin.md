@@ -357,15 +357,15 @@ contract SnipCoin is StandardToken {
         uint usdReceivedInCurrentTransaction = uint(msg.value / getWeiToUsdExchangeRate());
         totalUsdReceived = totalUsdReceived + usdReceivedInCurrentTransaction; // total usd received counter
 
-        // BK NOTE - The following statement should be the last statement in this function, but `saleWalletAddress` is trusted anyway
-        // BK Ok
-        saleWalletAddress.transfer(msg.value); // Transfer ether to safe sale address
         // BK Ok
         if (cappedBuyerList[msg.sender] > 0)
         {
             // BK Ok
             cappedBuyerList[msg.sender] = cappedBuyerList[msg.sender] + usdReceivedInCurrentTransaction;
         }
+
+        // BK Ok
+        saleWalletAddress.transfer(msg.value); // Transfer ether to safe sale address
     }
 }
 ```
