@@ -303,9 +303,27 @@ contract SnipCoin is StandardToken {
     }
 
     // BK Ok - Only permissioned accounts can execute this function
+    function addMultipleAddressesToCappedAddresses(address[] addrList) public onlyPermissioned {
+        // BK Ok
+        for (uint i = 0; i < addrList.length; i++) {
+            // BK Ok
+            addAddressToCappedAddresses(addrList[i]); // Allow a certain address to purchase SnipCoin up to the cap (<4500)
+        }
+    }
+
+    // BK Ok - Only permissioned accounts can execute this function
     function addAddressToUncappedAddresses(address addr) public onlyPermissioned {
         // BK Ok
         uncappedBuyerList[addr] = true; // Allow a certain address to purchase SnipCoin above the cap (>=$4500)
+    }
+
+    // BK Ok - Only permissioned accounts can execute this function
+    function addMultipleAddressesToUncappedAddresses(address[] addrList) public onlyPermissioned {
+        // BK Ok
+        for (uint i = 0; i < addrList.length; i++) {
+            // BK Ok
+            addAddressToUncappedAddresses(addrList[i]); // Allow a certain address to purchase SnipCoin up to the cap (<4500)
+        }
     }
 
     // BK Ok

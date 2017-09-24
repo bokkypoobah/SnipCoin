@@ -1,6 +1,6 @@
 # SnipCoin Token Contract Audit
 
-Status: There are a few outstanding low importance changes that were recommended and being considered.
+Status: There are a few outstanding low importance changes that were recommended and are being considered.
 
 <br />
 
@@ -15,10 +15,16 @@ This audit has been conducted on Snip's source code in commits
 [547c295](https://github.com/SnipToday/SnipCoin/commit/547c295895700ce44ab5d63cab506978e2f01634),
 [022fbf8](https://github.com/SnipToday/SnipCoin/commit/022fbf8f901cba0dcffe8121f97580bfdcc2ba0b),
 [f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43),
-[94ffa4d](https://github.com/SnipToday/SnipCoin/commit/94ffa4d4a3750c0cf584ac63a1df464dd4d6c3dc) and
-[07a5991](https://github.com/SnipToday/SnipCoin/commit/07a5991327b7c26e040e319aa67205ff96697a7d).
+[94ffa4d](https://github.com/SnipToday/SnipCoin/commit/94ffa4d4a3750c0cf584ac63a1df464dd4d6c3dc),
+[07a5991](https://github.com/SnipToday/SnipCoin/commit/07a5991327b7c26e040e319aa67205ff96697a7d) and
+[a5c4d0d](https://github.com/SnipToday/SnipCoin/commit/a5c4d0d32dcfeb9aa120a208c4ba285fdacabe60).
 
 No potential vulnerabilities have been identified in the crowdsale and token contract.
+
+Note that this crowdsale contract does not have a built in start and end date. The crowdsale contract can commence receiving
+contributions when the crowdsale administrator executes `openOrCloseSale(true)`. The crowdsale contract closes when the
+crowdsale administrator executes `openOrCloseSale(false)`. The tokens are transferable after the crowdsale administrator
+executes `allowTransfers()`.
 
 <br />
 
