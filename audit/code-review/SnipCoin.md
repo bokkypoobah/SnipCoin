@@ -152,7 +152,7 @@ contract SnipCoin is StandardToken {
 
     // BK Next 2 Ok
     mapping (address => bool) uncappedBuyerList;      // The list of buyers allowed to participate in the sale without a cap
-    mapping (address => bool) cappedBuyerList;        // The list of buyers allowed to participate in the sale
+    mapping (address => uint) cappedBuyerList;        // The list of buyers allowed to participate in the sale, with their updated payment sum
 
     // BK Ok
     uint public snipCoinToEtherExchangeRate = 300000; // This is the ratio of SnipCoin to Ether, could be updated by the owner
@@ -199,29 +199,26 @@ contract SnipCoin is StandardToken {
     // BK Ok
     modifier verifyBuyerCanMakePurchase() {
         // BK Ok
-        uint purchaseValueInUSD = uint(msg.value / getWeiToUsdExchangeRate()); // The USD worth of tokens sold
+        uint currentPurchaseValueInUSD = uint(msg.value / getWeiToUsdExchangeRate()); // The USD worth of tokens sold
+        // BK Ok
+        uint totalPurchaseIncludingCurrentPayment = currentPurchaseValueInUSD +  cappedBuyerList[msg.sender]; // The USD worth of all tokens this buyer bought
 
-        // BK OK
-        require(purchaseValueInUSD > MINIMUM_PURCHASE_IN_USD); // Minimum transfer is of $50
+        // BK Ok
+        require(currentPurchaseValueInUSD > MINIMUM_PURCHASE_IN_USD); // Minimum transfer is of $50
 
         // BK Ok
         uint EFFECTIVE_MAX_CAP = SALE_CAP_IN_USD + 1000;  // This allows for the end of the sale by passing $8M and reaching the cap
         // BK Ok
-        require(EFFECTIVE_MAX_CAP - totalUsdReceived > purchaseValueInUSD); // Make sure that there is enough usd left to buy.
+        require(EFFECTIVE_MAX_CAP - totalUsdReceived > currentPurchaseValueInUSD); // Make sure that there is enough usd left to buy.
 
         // BK Ok
-        if (purchaseValueInUSD >= USD_PURCHASE_AMOUNT_REQUIRING_ID) // Check if buyer is on uncapped white list
+        if (!uncappedBuyerList[msg.sender]) // If buyer is on uncapped white list then no worries, else need to make sure that they're okay
         {
             // BK Ok
-            require(uncappedBuyerList[msg.sender]);
-        }
-        // BK Ok
-        if (purchaseValueInUSD < USD_PURCHASE_AMOUNT_REQUIRING_ID) // Check if buyer is on capped white list
-        {
+            require(cappedBuyerList[msg.sender] > 0); // Check that the sender has been initialized.
             // BK Ok
-            require(cappedBuyerList[msg.sender] || uncappedBuyerList[msg.sender]);
+            require(totalPurchaseIncludingCurrentPayment < USD_PURCHASE_AMOUNT_REQUIRING_ID); // Check that they're not buying too much
         }
-        // BK Ok
         _;
     }
 
@@ -258,13 +255,6 @@ contract SnipCoin is StandardToken {
     function initializeUsdReceived() internal {
         // BK Ok
         totalUsdReceived = 4000000; // USD received before public sale. Verify this figure before the sale starts.
-    }
-
-    // BK NOTE - This is a duplicate of balanceOf(...)
-    // BK Ok - Constant function
-    function getBalance(address addr) public constant returns(uint) {
-        // BK Ok
-        return balances[addr];
     }
 
     // BK NOTE - ethToUsdExchangeRate should be set to a sensible value and not be 0, or this will cause a division by 0 error
@@ -309,7 +299,7 @@ contract SnipCoin is StandardToken {
     // BK Ok - Only permissioned accounts can execute this function
     function addAddressToCappedAddresses(address addr) public onlyPermissioned {
         // BK Ok
-        cappedBuyerList[addr] = true; // Allow a certain address to purchase SnipCoin up to the cap (<4500)
+        cappedBuyerList[addr] = 1; // Allow a certain address to purchase SnipCoin up to the cap (<4500)
     }
 
     // BK Ok - Only permissioned accounts can execute this function
@@ -346,10 +336,18 @@ contract SnipCoin is StandardToken {
 
         // BK Next 2 Ok
         totalEthReceivedInWei = totalEthReceivedInWei + msg.value; // total eth received counter
-        totalUsdReceived = totalUsdReceived + msg.value / getWeiToUsdExchangeRate(); // total usd received counter
+        uint usdReceivedInCurrentTransaction = uint(msg.value / getWeiToUsdExchangeRate());
+        totalUsdReceived = totalUsdReceived + usdReceivedInCurrentTransaction; // total usd received counter
 
+        // BK NOTE - The following statement should be the last statement in this function, but `saleWalletAddress` is trusted anyway
         // BK Ok
         saleWalletAddress.transfer(msg.value); // Transfer ether to safe sale address
+        // BK Ok
+        if (cappedBuyerList[msg.sender] > 0)
+        {
+            // BK Ok
+            cappedBuyerList[msg.sender] = cappedBuyerList[msg.sender] + usdReceivedInCurrentTransaction;
+        }
     }
 }
 ```

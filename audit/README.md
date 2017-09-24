@@ -76,6 +76,9 @@ This *SnipCoin* token contract does not use *SafeMath* but has the checks to pre
 * [Due Diligence](#due-diligence)
 * [Risks](#risks)
 * [Testing](#testing)
+  * [Contribution From Capped And Uncapped Whitelisted Accounts](#contribution-from-capped-and-uncapped-whitelisted-accounts)
+  * [Contribution From Uncapped Whitelisted Accounts To Max USD Cap](#contribution-from-uncapped-whitelisted-accounts-to-max-usd-cap)
+  * [Contribution From Capped Whitelisted Accounts To Account Cap](#contribution-from-capped-whitelisted-accounts-to-account-cap)
 * [Code Review](#code-review)
 
 <br />
@@ -317,17 +320,21 @@ For an example, see [test/modifiedContracts/SnipCoin_secondreview_example.sol](t
 
   * [x] Fixed in [07a5991](https://github.com/SnipToday/SnipCoin/commit/07a5991327b7c26e040e319aa67205ff96697a7d)
 
+* **LOW IMPORTANCE** The whitelisted cap amount applies to each transaction and not a participant's total contributions. Consider whether
+  the cap amount should be applied to a participant's total contribution or to each individual transaction
+
+  * [x] Fixed in [07a5991](https://github.com/SnipToday/SnipCoin/commit/07a5991327b7c26e040e319aa67205ff96697a7d)
+
 * **LOW IMPORTANCE** Some of the recent tokens have a requirement that a non-0 approval amount must be set to 0 before being able to set it
-  to a new non-0 approval amount. See [GimliToken.sol](https://github.com/bokkypoobah/GimliTokenContractAudit/blob/master/sol/GimliToken.sol#L79-L83_
+  to a new non-0 approval amount. See [GimliToken.sol](https://github.com/bokkypoobah/GimliTokenContractAudit/blob/master/sol/GimliToken.sol#L79-L83)
   for an example, including the linked comment
   
 * **LOW IMPORTANCE** The `transfer(...)` and `transferFrom(...)` return a false if the transfer fails. Some of the newer tokens throw
   an error instead of returning false - search for "throw" in the [ERC20 standard](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md)
 
-* **LOW IMPORTANCE** The whitelisted cap amount applies to each transaction and not a participant's total contributions. Consider whether
-  the cap amount should be applied to a participant's total contribution or to each individual transaction
-
-  * [ ] CHECK - Fixed in [07a5991](https://github.com/SnipToday/SnipCoin/commit/07a5991327b7c26e040e319aa67205ff96697a7d)?
+* **LOW IMPORTANCE** `saleWalletAddress.transfer(msg.value);` should be the last statement in `function ()`. This is not very
+  important as `saleWalletAddress` is under the control of the crowdsale administrator. But if the destination of this ETH transfer
+  is a participants wallet, the program control flow can be hijacked
 
 <br />
 
@@ -391,6 +398,8 @@ matches the audited source code, and that the deployment parameters are correctl
 
 ## Testing
 
+### Contribution From Capped And Uncapped Whitelisted Accounts
+
 The following functions were tested using the script [test/01_test1.sh](test/01_test1.sh) with the summary results saved
 in [test/test1results.txt](test/test1results.txt) and the detailed output saved in [test/test1output.txt](test/test1output.txt):
 
@@ -405,20 +414,36 @@ in [test/test1results.txt](test/test1results.txt) and the detailed output saved 
 * [x] Enable transfers
 * [x] `transfer(...)` and `transferFrom(...)` the *SNIP* tokens
 
+<br />
+
+### Contribution From Uncapped Whitelisted Accounts To Max USD Cap
+
 The following functions were tested using the script [test/02_test2.sh](test/02_test2.sh) with the summary results saved
 in [test/test2results.txt](test/test2results.txt) and the detailed output saved in [test/test2output.txt](test/test2output.txt):
 
 * [x] Deploy Crowdsale/Token contract
 * [x] Add accounts to capped and uncapped whitelists
 * [x] Open crowdsale
-* [x] Contribute to just below the 8m USD cap
-* [x] Contribute to just above the 8m USD cap - contribution rejected
-* [x] Contribute to the 8m USD cap
+* [x] Contribute from uncapped account to just below the 8m USD cap
+* [x] Contribute from uncapped account to just above the 8m USD cap - contribution rejected
+* [x] Contribute from uncapped account to the 8m USD cap
 * [x] Close crowdsale
 * [x] Enable transfers
 * [x] `transfer(...)` the *SNIP* tokens
 
 <br />
+
+### Contribution From Capped Whitelisted Accounts To Account Cap
+
+The following functions were tested using the script [test/03_test3.sh](test/03_test3.sh) with the summary results saved
+in [test/test3results.txt](test/test3results.txt) and the detailed output saved in [test/test3output.txt](test/test3output.txt):
+
+* [x] Deploy Crowdsale/Token contract
+* [x] Add accounts to capped and uncapped whitelists
+* [x] Open crowdsale
+* [x] Contribute from capped account to just below the capped amount
+* [x] Contribute from uncapped account to just above the capped amount - contribution rejected
+* [x] Contribute from uncapped account to the capped amount
 
 <br />
 

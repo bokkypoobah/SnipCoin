@@ -1,1 +1,1 @@
-tokenAddress=0x94ed3af45741cb4d67d12006373ecbbe265f958d
+tokenAddress=0x1d82a66b23c73f4e45a813962eb01e5dd680aafa
