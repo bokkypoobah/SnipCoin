@@ -219,6 +219,9 @@ For an example, see [test/modifiedContracts/SnipCoin.sol](test/modifiedContracts
   `The function SHOULD throw unless the _from account has deliberately authorized the sender of the message via some mechanism.` for
   the `transferFrom(...)` function. This `throw` behaviour has not been implemented in the example.
 
+* **LOW IMPORTANCE** Consider making `contractOwner`, `accountWithUpdatePermissions` and `DECIMALS_MULTIPLIER` public to allow for easier
+  validation
+
 <br />
 
 <hr />

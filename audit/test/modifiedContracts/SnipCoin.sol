@@ -102,11 +102,11 @@ contract SnipCoin is StandardToken {
     bool public isSaleOpen = false;                   // This opens and closes upon external command
     uint public ethToUsdExchangeRate = 285;           // Number of USD in one Eth
 
-    address private contractOwner;                    // Address of the contract owner
+    address public contractOwner;                    // Address of the contract owner
     // Address of an additional account to manage the sale without risk to the tokens or eth. Change before the sale
-    address private accountWithUpdatePermissions = 0x686f152daD6490DF93B267E319f875A684Bd26e2;
+    address public accountWithUpdatePermissions = 0x686f152daD6490DF93B267E319f875A684Bd26e2;
 
-    uint private constant DECIMALS_MULTIPLIER = 10**uint(decimals);  // Multiplier for the decimals
+    uint public constant DECIMALS_MULTIPLIER = 10**uint(decimals);   // Multiplier for the decimals
     uint public constant SALE_CAP_IN_USD = 8000000;                  // The total sale cap in USD
     uint public constant MINIMUM_PURCHASE_IN_USD = 50;               // It is impossible to purchase tokens for more than $50 in the sale.
     uint public constant USD_PURCHASE_AMOUNT_REQUIRING_ID = 4500;    // Above this purchase amount an ID is required.
