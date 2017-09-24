@@ -52,8 +52,8 @@ printf "STARTTIME       = '$STARTTIME' '$STARTTIME_S'\n" | tee -a $TEST1OUTPUT
 printf "ENDTIME         = '$ENDTIME' '$ENDTIME_S'\n" | tee -a $TEST1OUTPUT
 
 # Make copy of SOL file and modify start and end times ---
-`cp modifiedContracts/SnipCoin.sol .`
-# `cp $SOURCEDIR/*.sol .`
+# `cp modifiedContracts/SnipCoin.sol .`
+`cp $SOURCEDIR/SnipCoin.sol .`
 
 # --- Modify parameters ---
 # `perl -pi -e "s/bool transferable/bool public transferable/" $TOKENSOL`

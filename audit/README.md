@@ -7,8 +7,10 @@
 Status: Work in progress
 
 Commits
-[547c295](https://github.com/SnipToday/SnipCoin/commit/547c295895700ce44ab5d63cab506978e2f01634) and
-[022fbf8](https://github.com/SnipToday/SnipCoin/commit/022fbf8f901cba0dcffe8121f97580bfdcc2ba0b).
+[547c295](https://github.com/SnipToday/SnipCoin/commit/547c295895700ce44ab5d63cab506978e2f01634),
+[022fbf8](https://github.com/SnipToday/SnipCoin/commit/022fbf8f901cba0dcffe8121f97580bfdcc2ba0b),
+[f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43) and
+[94ffa4d](https://github.com/SnipToday/SnipCoin/commit/94ffa4d4a3750c0cf584ac63a1df464dd4d6c3dc).
 
 <br />
 
@@ -162,20 +164,32 @@ Commits
 
 ### Second Review Recommendations
 
-For an example, see [test/modifiedContracts/SnipCoin.sol](test/modifiedContracts/SnipCoin.sol)
+For an example, see [test/modifiedContracts/SnipCoin_secondreview_example.sol](test/modifiedContracts/SnipCoin_secondreview_example.sol)
 
 * **HIGH IMPORTANCE** The statement `transferFrom(...)` in the fallback `function ()` will not execute as expected because the
   `transferFrom(...)` transfer of tokens require an `approve(...)` function call before the tokens can be moved
+
+  * [x] Fixed in [f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43)
 
 * **MEDIUM IMPORTANCE** The functions `initializeSaleWalletAddress()`, `initializeEthReceived()` and `initializeUsdReceived()` have
   no access modifiers specified. Anyone can call these functions anytime to reset these variables. Mark these functions as `internal`
   to prevent these functions being executed by anyone
 
+  * [x] Fixed in [f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43)
+
 * **MEDIUM IMPORTANCE** The functions `getBalance(...)`, `getWeiToUsdExchangeRate()` should be marked `constant` 
+
+
+  * [x] Fixed in [f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43)
 
 * **MEDIUM IMPORTANCE** Consider disabling `transfer(...)` and `transferFrom(...)` while the sale is in progress
 
+  * [x] Fixed in [f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43) and
+    [94ffa4d](https://github.com/SnipToday/SnipCoin/commit/94ffa4d4a3750c0cf584ac63a1df464dd4d6c3dc)
+
 * **MEDIUM IMPORTANCE** Prevent the crowdsale being reopened once the tokens are transferable
+
+  * [x] Fixed in [f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43)
 
 * **LOW IMPORTANCE** Fix the compiler warnings - unused variables. Replace the empty function body `{}` with a `;` for the
   *Token* interface to declare the functions as un-implemented functions that will be overridden in the derived contract.
@@ -187,34 +201,56 @@ For an example, see [test/modifiedContracts/SnipCoin.sol](test/modifiedContracts
   Note that in the example, `uint public totalSupply` is defined in *Token* because the automatically generated getter function
   does not match the abstract function `function totalSupply() constant returns (uint256 supply);`
 
+  * [x] Fixed in [f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43)
+
 * **LOW IMPORTANCE** Use `uint` or `uint256` consistently, not both
+
+  * [x] Fixed in [f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43)
 
 * **LOW IMPORTANCE** Consider moving `require((msg.sender == contractOwner) || (msg.sender == accountWithUpdatePermissions)); // Verify ownership`
   into a modifier like `onlyPermissioned` and using this modifier in function that would otherwise have repeated code
 
+  * [x] Fixed in [f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43)
+
 * **LOW IMPORTANCE** Consider converting `verifySaleNotOver()` and `verifyBuyerCanMakePurchase()` into modifiers and applying them to
   the fallback `function()`
+
+  * [x] Fixed in [f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43)
 
 * **LOW IMPORTANCE** `WEI_IN_ETHER = 1000 * 1000 * 1000 * 1000 * 1000 * 1000` is the same as `1 ether`. Consider using `1 ether`
   to simplify the code
 
+  * [x] Fixed in [f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43)
+
 * **LOW IMPORTANCE** Consider explicitly using the `public` on functions that are meant to be executed directly via transactions
+
+  * [x] Fixed in [f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43)
 
 * **LOW IMPORTANCE** Consider moving the statement `balances[_to] += _value;` after subtracting `_value` from the source account and
   the approval in `transferFrom(...)`
 
+  * [x] Fixed in [f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43)
+
 * **LOW IMPORTANCE** Consider adding the overflow check `balances[_to] + _value > balances[_to]` to `transfer(...)` and
   `transferFrom(...)` and removing the comments that it could be used
+
+  * [x] Fixed in [f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43)
 
 * **LOW IMPORTANCE** The event `Transfer({source}, {destination}, {value});` should be logged whenever there is a change in the
   balances mapping structure
 
+  * [x] Fixed in [f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43)
+
 * **LOW IMPORTANCE** Move `saleWalletAddress.transfer(msg.value);` to the last statement in the fallback `function ()` as
   good practice, even though the `saleWalletAddress` is under the control of the crowdsale project
+
+  * [x] Fixed in [f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43)
 
 * **LOW IMPORTANCE** Consider using the statement `balances[contractOwner] = totalSupply;` instead of
   `balances[msg.sender] = totalSupply;` in the `SnipCoin.SnipCoin()` constructor as this explicitly states that the tokens
   are all initially assigned to the `contractOwner`
+
+  * [x] Fixed in [f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43)
 
 * **LOW IMPORTANCE** The recently standardised [ERC20 standard](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md#transfer)
    states that `Note Transfers of 0 values MUST be treated as normal transfers and fire the Transfer event.`. Consider updating
@@ -225,8 +261,12 @@ For an example, see [test/modifiedContracts/SnipCoin.sol](test/modifiedContracts
   `The function SHOULD throw unless the _from account has deliberately authorized the sender of the message via some mechanism.` for
   the `transferFrom(...)` function. This `throw` behaviour has not been implemented in the example
 
+  * [x] Fixed in [f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43)
+
 * **LOW IMPORTANCE** Consider making `contractOwner`, `accountWithUpdatePermissions` and `DECIMALS_MULTIPLIER` public to allow for easier
   validation
+
+  * [x] Fixed in [f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43)
 
 <br />
 
@@ -318,6 +358,6 @@ Details of the testing environment can be found in [test](test).
 ## Code Review
 
 * [ ] [code-review/SnipCoin.md](code-review/SnipCoin.md)
-  * [ ] contract Token 
-  * [ ] contract StandardToken is Token 
+  * [x] contract Token 
+  * [x] contract StandardToken is Token 
   * [ ] contract SnipCoin is StandardToken 
