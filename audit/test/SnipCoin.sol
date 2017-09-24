@@ -100,9 +100,11 @@ contract SnipCoin is StandardToken {
 
     uint public snipCoinToEtherExchangeRate = 300000; // This is the ratio of SnipCoin to Ether, could be updated by the owner
     bool public isSaleOpen = false;                   // This opens and closes upon external command
+    bool public transferable = false;                 // Tokens are transferable
+
     uint public ethToUsdExchangeRate = 285;           // Number of USD in one Eth
 
-    address public contractOwner;                    // Address of the contract owner
+    address public contractOwner;                     // Address of the contract owner
     // Address of an additional account to manage the sale without risk to the tokens or eth. Change before the sale
     address public accountWithUpdatePermissions = 0x686f152daD6490DF93B267E319f875A684Bd26e2;
 
@@ -181,7 +183,12 @@ contract SnipCoin is StandardToken {
     }
 
     function openOrCloseSale(bool saleCondition) public onlyPermissioned {
+        require(!transferable);
         isSaleOpen = saleCondition; // Decide if the sale should be open or closed (default: closed)
+    }
+
+    function allowTransfers() public onlyPermissioned {
+        transferable = true;
     }
 
     function addAddressToCappedAddresses(address addr) public onlyPermissioned {
@@ -192,8 +199,18 @@ contract SnipCoin is StandardToken {
         uncappedBuyerList[addr] = true; // Allow a certain address to purchase SnipCoin above the cap (>=$4500)
     }
 
+    function transfer(address _to, uint _value) public returns (bool success) {
+        require(transferable);
+        return super.transfer(_to, _value);
+    }
+
+    function transferFrom(address _from, address _to, uint _value) public returns (bool success) {
+        require(transferable);
+        return super.transferFrom(_from, _to, _value);
+    }
+
     function () public payable verifySaleNotOver verifyBuyerCanMakePurchase {
-        uint tokens = snipCoinToEtherExchangeRate * msg.value / 1 ether;
+        uint tokens = snipCoinToEtherExchangeRate * msg.value;
         balances[contractOwner] -= tokens;
         balances[msg.sender] += tokens;
         Transfer(contractOwner, msg.sender, tokens);

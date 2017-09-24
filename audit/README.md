@@ -173,6 +173,10 @@ For an example, see [test/modifiedContracts/SnipCoin.sol](test/modifiedContracts
 
 * **MEDIUM IMPORTANCE** The functions `getBalance(...)`, `getWeiToUsdExchangeRate()` should be marked `constant` 
 
+* **MEDIUM IMPORTANCE** Consider disabling `transfer(...)` and `transferFrom(...)` while the sale is in progress
+
+* **MEDIUM IMPORTANCE** Prevent the crowdsale being reopened once the tokens are transferable
+
 * **LOW IMPORTANCE** Fix the compiler warnings - unused variables. Replace the empty function body `{}` with a `;` for the
   *Token* interface to declare the functions as un-implemented functions that will be overridden in the derived contract.
 
@@ -203,7 +207,7 @@ For an example, see [test/modifiedContracts/SnipCoin.sol](test/modifiedContracts
   `transferFrom(...)` and removing the comments that it could be used
 
 * **LOW IMPORTANCE** The event `Transfer({source}, {destination}, {value});` should be logged whenever there is a change in the
-  balances mapping structure. Note that the event may not be logged in the `SnipCoin.SnipCoin()` constructor
+  balances mapping structure
 
 * **LOW IMPORTANCE** Move `saleWalletAddress.transfer(msg.value);` to the last statement in the fallback `function ()` as
   good practice, even though the `saleWalletAddress` is under the control of the crowdsale project
@@ -219,12 +223,10 @@ For an example, see [test/modifiedContracts/SnipCoin.sol](test/modifiedContracts
   The recently standardised ERC20 standard also states that
   `The function SHOULD throw if the _from account balance does not have enough tokens to spend.` for the `transfer(...)` function, and
   `The function SHOULD throw unless the _from account has deliberately authorized the sender of the message via some mechanism.` for
-  the `transferFrom(...)` function. This `throw` behaviour has not been implemented in the example.
+  the `transferFrom(...)` function. This `throw` behaviour has not been implemented in the example
 
 * **LOW IMPORTANCE** Consider making `contractOwner`, `accountWithUpdatePermissions` and `DECIMALS_MULTIPLIER` public to allow for easier
   validation
-
-* **LOW IMPORTANCE** Consider disabling `transfer(...)` and `transferFrom(...)` while the sale is in progress
 
 <br />
 
@@ -288,13 +290,22 @@ matches the audited source code, and that the deployment parameters are correctl
 
 ## Testing
 
+NOTE that the testing below has been conducted on [test/modifiedContracts/SnipCoin.sol](test/modifiedContracts/SnipCoin.sol) that
+is an example of the second set of recommended alterations to [../contracts/SnipCoin.sol](../contracts/SnipCoin.sol).
+
 The following functions were tested using the script [test/01_test1.sh](test/01_test1.sh) with the summary results saved
 in [test/test1results.txt](test/test1results.txt) and the detailed output saved in [test/test1output.txt](test/test1output.txt):
 
-* [ ] Deploy Crowdsale/Token contract
-* [ ] Contribute to the crowdsale contract
-* [ ] Finalise the crowdsale
-* [ ] `transfer(...)` and `transferFrom(...)` the *CND* tokens
+* [x] Deploy Crowdsale/Token contract
+* [x] Add accounts to capped and uncapped whitelists
+* [x] Contribute before crowdsale start - rejected
+* [x] Open crowdsale
+* [x] Small contribution after crowdsale start
+* [x] Large contribution after crowdsale start, past cap. Capped whitelisted contribution rejected. Uncapped whitelisted accepted 
+* [x] Moderate contribution after crowdsale start, below cap. Both capped and uncapped contribution accepted 
+* [x] Close crowdsale
+* [x] Enable transfers
+* [x] `transfer(...)` and `transferFrom(...)` the *SNIP* tokens
 
 <br />
 
@@ -310,5 +321,3 @@ Details of the testing environment can be found in [test](test).
   * [ ] contract Token 
   * [ ] contract StandardToken is Token 
   * [ ] contract SnipCoin is StandardToken 
-
-

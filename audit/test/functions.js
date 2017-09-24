@@ -10,15 +10,15 @@ var accountNames = {};
 addAccount(eth.accounts[0], "Account #0 - Miner");
 addAccount(eth.accounts[1], "Account #1 - Contract Owner");
 addAccount(eth.accounts[2], "Account #2 - Wallet");
-addAccount(eth.accounts[3], "Account #3 - Prealloc");
-addAccount(eth.accounts[4], "Account #4 - Prealloc");
+addAccount(eth.accounts[3], "Account #3 - Uncapped");
+addAccount(eth.accounts[4], "Account #4 - Capped");
 addAccount(eth.accounts[5], "Account #5");
 addAccount(eth.accounts[6], "Account #6");
 addAccount(eth.accounts[7], "Account #7");
 addAccount(eth.accounts[8], "Account #8");
-addAccount(eth.accounts[9], "Account #9 - Vested 1 Tokens");
-addAccount(eth.accounts[10], "Account #10 - Vested 2 Tokens");
-addAccount("0xABcdEFABcdEFabcdEfAbCdefabcdeFABcDEFabCD", "Locked Tokens");
+addAccount(eth.accounts[9], "Account #9");
+addAccount(eth.accounts[10], "Account #10");
+addAccount("0x686f152daD6490DF93B267E319f875A684Bd26e2", "Crowdsale Wallet");
 
 
 var minerAccount = eth.accounts[0];
@@ -199,6 +199,7 @@ function printTokenContractDetails() {
     console.log("RESULT: token.saleWalletAddress=" + contract.saleWalletAddress());
     console.log("RESULT: token.snipCoinToEtherExchangeRate=" + contract.snipCoinToEtherExchangeRate());
     console.log("RESULT: token.isSaleOpen=" + contract.isSaleOpen());
+    console.log("RESULT: token.transferable=" + contract.transferable());
     console.log("RESULT: token.ethToUsdExchangeRate=" + contract.ethToUsdExchangeRate());
     console.log("RESULT: token.contractOwner=" + contract.contractOwner());
     console.log("RESULT: token.accountWithUpdatePermissions=" + contract.accountWithUpdatePermissions());
