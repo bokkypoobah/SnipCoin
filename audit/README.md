@@ -162,15 +162,54 @@ Commits
 
 ### Second Review Recommendations
 
+For an example, see [test/modifiedContracts/SnipCoin.sol](test/modifiedContracts/SnipCoin.sol)
+
+* **HIGH IMPORTANCE** The statement `transferFrom(...)` in the fallback `function ()` will not execute as expected because the
+  `transferFrom(...)` transfer of tokens require an `approve(...)` function call before the tokens can be moved
+
+* **MEDIUM IMPORTANCE** The functions `initializeSaleWalletAddress()`, `initializeEthReceived()` and `initializeUsdReceived()` have
+  no access modifiers specified. Anyone can call these functions anytime to reset these variables. Mark these functions as `internal`
+  to prevent these functions being executed by anyone
+
 * **LOW IMPORTANCE** Fix the compiler warnings - unused variables. Replace the empty function body `{}` with a `;` for the
   *Token* interface to declare the functions as un-implemented functions that will be overridden in the derived contract.
-
-  For an example, see [test/modifiedContracts/SnipCoin.sol](test/modifiedContracts/SnipCoin.sol)
 
       SnipCoin.sol:6:46: Warning: Unused local variable
           function totalSupply() constant returns (uint256 supply) {}
                                                    ^------------^
 
+* **LOW IMPORTANCE** Use `uint` or `uint256` consistently, not both
+
+* **LOW IMPORTANCE** Consider moving `require((msg.sender == contractOwner) || (msg.sender == accountWithUpdatePermissions)); // Verify ownership`
+  into a modifier like `onlyPermissioned` and using this modifier in function that would otherwise have repeated code
+
+* **LOW IMPORTANCE** Consider converting `verifySaleNotOver()` and `verifyBuyerCanMakePurchase()` into modifiers and applying them to
+  the fallback `function()`
+
+* **LOW IMPORTANCE** `WEI_IN_ETHER = 1000 * 1000 * 1000 * 1000 * 1000 * 1000` is the same as `1 ether`. Consider using `1 ether`
+  to simplify the code
+
+* **LOW IMPORTANCE** Consider explicitly using the `public` on functions that are meant to be executed directly via transactions
+
+* **LOW IMPORTANCE** Consider moving the statement `balances[_to] += _value;` after subtracting `_value` from the source account and
+  the approval in `transferFrom(...)`
+
+* **LOW IMPORTANCE** Consider adding the overflow check `balances[_to] + _value > balances[_to]` to `transfer(...)` and
+  `transferFrom(...)` and removing the comments that it could be used
+
+* **LOW IMPORTANCE** The event `Transfer({source}, {destination}, {value});` should be logged whenever there is a change in the
+  balances mapping structure. Note that the event may not be logged in the `SnipCoin.SnipCoin()` constructor
+
+* **LOW IMPORTANCE** Move `saleWalletAddress.transfer(msg.value);` to the last statement in the fallback `function ()` as
+  good practice, even though the `saleWalletAddress` is under the control of the crowdsale project
+
+* **LOW IMPORTANCE** Consider using the statement `balances[contractOwner] = totalSupply;` instead of
+  `balances[msg.sender] = totalSupply;` in the `SnipCoin.SnipCoin()` constructor as this explicitly states that the tokens
+  are all initially assigned to the `contractOwner`
+
+* **LOW IMPORTANCE** The new [ERC20 standard](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md#transfer) states that
+  `Note Transfers of 0 values MUST be treated as normal transfers and fire the Transfer event.`. Consider updating
+  `transfer(...)` and `transferFrom(...)` to treat 0 transfers as valid transfers
 
 <br />
 
