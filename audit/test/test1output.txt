@@ -8,42 +8,45 @@ DEPLOYMENTDATA  = 'deploymentData.txt'
 INCLUDEJS       = './include.js'
 TEST1OUTPUT     = 'test1output.txt'
 TEST1RESULTS    = 'test1results.txt'
-CURRENTTIME     = '1506215009' 'Sun 24 Sep 2017 01:03:29 UTC'
-STARTTIME       = '1506215099' 'Sun 24 Sep 2017 01:04:59 UTC'
-ENDTIME         = '1506215189' 'Sun 24 Sep 2017 01:06:29 UTC'
+CURRENTTIME     = '1506228903' 'Sun 24 Sep 2017 04:55:03 UTC'
+STARTTIME       = '1506228993' 'Sun 24 Sep 2017 04:56:33 UTC'
+ENDTIME         = '1506229083' 'Sun 24 Sep 2017 04:58:03 UTC'
 --- Differences ../../contracts/SnipCoin.sol SnipCoin.sol ---
-6c6
+6c6,9
 <     function totalSupply() constant returns (uint256 supply) {}
 ---
->     function totalSupply() public constant returns (uint supply);
-10c10
+>     // function totalSupply() public constant returns (uint supply);
+>     // `totalSupply` is defined below because the automatically generated
+>     // getter function does not match the abstract function above
+>     uint public totalSupply;
+10c13
 <     function balanceOf(address _owner) constant returns (uint256 );
 ---
 >     function balanceOf(address _owner) public constant returns (uint);
-16c16
+16c19
 <     function transfer(address _to, uint256 _value) returns (bool success);
 ---
 >     function transfer(address _to, uint _value) public returns (bool success);
-23c23
+23c26
 <     function transferFrom(address _from, address _to, uint256 _value) returns (bool success);
 ---
 >     function transferFrom(address _from, address _to, uint _value) public returns (bool success);
-29c29
+29c32
 <     function approve(address _spender, uint256 _value) returns (bool success);
 ---
 >     function approve(address _spender, uint _value) public returns (bool success);
-34c34,37
+34c37,40
 <     function allowance(address _owner, address _spender) constant returns (uint256 remaining);
 ---
 >     function allowance(address _owner, address _spender) public constant returns (uint remaining);
 > 
 >     event Transfer(address indexed _from, address indexed _to, uint _value);
 >     event Approval(address indexed _owner, address indexed _spender, uint _value);
-36,38d38
+36,38d41
 <     event Transfer(address indexed _from, address indexed _to, uint256 _value);
 <     event Approval(address indexed _owner, address indexed _spender, uint256 _value);
 <     
-42,48c42,45
+42,48c45,48
 <     
 <     function transfer(address _to, uint256 _value) returns (bool success) {
 <         //Default assumes totalSupply can't be over max (2^256 - 1).
@@ -55,8 +58,8 @@ ENDTIME         = '1506215189' 'Sun 24 Sep 2017 01:06:29 UTC'
 > 
 >     function transfer(address _to, uint _value) public returns (bool success) {
 >         if (balances[msg.sender] >= _value &&          // Account has sufficient balance
->             balances[_to] + _value > balances[_to]) {  // Overflow check
-56,60c53,56
+>             balances[_to] + _value >= balances[_to]) { // Overflow check
+56,60c56,59
 <     function transferFrom(address _from, address _to, uint256 _value) returns (bool success) {
 <         //same as above. Replace this line with the following if you want to protect against wrapping uints.
 <         //if (balances[_from] >= _value && allowed[_from][msg.sender] >= _value && balances[_to] + _value > balances[_to]) {
@@ -66,32 +69,31 @@ ENDTIME         = '1506215189' 'Sun 24 Sep 2017 01:06:29 UTC'
 >     function transferFrom(address _from, address _to, uint _value) public returns (bool success) {
 >         if (balances[_from] >= _value &&                // Account has sufficient balance
 >             allowed[_from][msg.sender] >= _value &&     // Amount has been approved
->             balances[_to] + _value > balances[_to]) {   // Overflow check
-62a59
+>             balances[_to] + _value >= balances[_to]) {  // Overflow check
+62a62
 >             balances[_to] += _value;
-68c65
+68c68
 <     function balanceOf(address _owner) constant returns (uint256 balance) {
 ---
 >     function balanceOf(address _owner) public constant returns (uint balance) {
-72c69
+72c72
 <     function approve(address _spender, uint256 _value) returns (bool success) {
 ---
 >     function approve(address _spender, uint _value) public returns (bool success) {
-78c75
+78c78
 <     function allowance(address _owner, address _spender) constant returns (uint256 remaining) {
 ---
 >     function allowance(address _owner, address _spender) public constant returns (uint remaining) {
-82,84c79,81
+82,84c82,83
 <     mapping (address => uint256) balances;
 <     mapping (address => mapping (address => uint256)) allowed;
 <     uint256 public totalSupply;
 ---
 >     mapping (address => uint) balances;
 >     mapping (address => mapping (address => uint)) allowed;
->     uint public totalSupply;
-90d86
+90d88
 <     /* Public variables of the token */
-92,101c88,97
+92,101c90,99
 <     string public constant name = "SnipCoin";       // Token name
 <     string public symbol = "SNIP";          // Token identifier
 <     uint8 public constant decimals = 18;          // Decimal points for token
@@ -113,7 +115,7 @@ ENDTIME         = '1506215189' 'Sun 24 Sep 2017 01:06:29 UTC'
 > 
 >     mapping (address => bool) uncappedBuyerList;      // The list of buyers allowed to participate in the sale without a cap
 >     mapping (address => bool) cappedBuyerList;        // The list of buyers allowed to participate in the sale
-104,107c100,103
+104,107c102,105
 <     bool public isSaleOpen = false; // This opens and closes upon external command
 <     uint public ethToUsdExchangeRate = 285; // Number of USD in one Eth
 <     
@@ -122,15 +124,13 @@ ENDTIME         = '1506215189' 'Sun 24 Sep 2017 01:06:29 UTC'
 >     bool public isSaleOpen = false;                   // This opens and closes upon external command
 >     uint public ethToUsdExchangeRate = 285;           // Number of USD in one Eth
 > 
->     address private contractOwner;                    // Address of the contract owner
-111,115c107,150
-<     uint private constant DECIMALS_MULTIPLIER = 10**uint(decimals);    // Multiplier for the decimals
-<     uint private constant WEI_IN_ETHER = 1000 * 1000 * 1000 * 1000 * 1000 * 1000; // Number of wei in 1 eth
-<     uint public constant SALE_CAP_IN_USD = 8000000;  // The total sale cap in USD
-<     uint public constant MINIMUM_PURCHASE_IN_USD = 50;  // It is impossible to purchase tokens for more than $50 in the sale.
-<     uint public constant USD_PURCHASE_AMOUNT_REQUIRING_ID = 4500;  // Above this purchase amount an ID is required.
+>     address public contractOwner;                    // Address of the contract owner
+109c107,147
+<     address private accountWithUpdatePermissions = 0x686f152daD6490DF93B267E319f875A684Bd26e2;
 ---
->     uint private constant DECIMALS_MULTIPLIER = 10**uint(decimals);  // Multiplier for the decimals
+>     address public accountWithUpdatePermissions = 0x686f152daD6490DF93B267E319f875A684Bd26e2;
+> 
+>     uint public constant DECIMALS_MULTIPLIER = 10**uint(decimals);   // Multiplier for the decimals
 >     uint public constant SALE_CAP_IN_USD = 8000000;                  // The total sale cap in USD
 >     uint public constant MINIMUM_PURCHASE_IN_USD = 50;               // It is impossible to purchase tokens for more than $50 in the sale.
 >     uint public constant USD_PURCHASE_AMOUNT_REQUIRING_ID = 4500;    // Above this purchase amount an ID is required.
@@ -169,71 +169,78 @@ ENDTIME         = '1506215189' 'Sun 24 Sep 2017 01:06:29 UTC'
 >         initializeSaleWalletAddress();
 >         initializeEthReceived();
 >         initializeUsdReceived();
-> 
+111,115c149,153
+<     uint private constant DECIMALS_MULTIPLIER = 10**uint(decimals);    // Multiplier for the decimals
+<     uint private constant WEI_IN_ETHER = 1000 * 1000 * 1000 * 1000 * 1000 * 1000; // Number of wei in 1 eth
+<     uint public constant SALE_CAP_IN_USD = 8000000;  // The total sale cap in USD
+<     uint public constant MINIMUM_PURCHASE_IN_USD = 50;  // It is impossible to purchase tokens for more than $50 in the sale.
+<     uint public constant USD_PURCHASE_AMOUNT_REQUIRING_ID = 4500;  // Above this purchase amount an ID is required.
+---
 >         contractOwner = msg.sender;                      // The creator of the contract is its owner
 >         totalSupply = 10000000000 * DECIMALS_MULTIPLIER; // In total, 10 billion tokens
->         balances[msg.sender] = totalSupply;              // Initially give owner all of the tokens 
+>         balances[contractOwner] = totalSupply;           // Initially give owner all of the tokens 
+>         Transfer(0x0, contractOwner, totalSupply);
 >     }
-117,118c152
+117,118c155
 <     function initializeSaleWalletAddress()
 <     {
 ---
 >     function initializeSaleWalletAddress() internal {
-122,124c156,157
+122,124c159,160
 <     function initializeEthReceived()
 <     {
 <         totalEthReceivedInWei = 14500 * WEI_IN_ETHER; // Ether received before public sale. Verify this figure before the sale starts.
 ---
 >     function initializeEthReceived() internal {
 >         totalEthReceivedInWei = 14500 * 1 ether; // Ether received before public sale. Verify this figure before the sale starts.
-127,128c160
+127,128c163
 <     function initializeUsdReceived()
 <     {
 ---
 >     function initializeUsdReceived() internal {
-132,133c164
+132,133c167
 <     function getBalance(address addr) returns(uint)
 <     {
 ---
 >     function getBalance(address addr) public constant returns(uint) {
-137,139c168,169
+137,139c171,172
 <     function getWeiToUsdExchangeRate() returns(uint)
 <     {
 <         return WEI_IN_ETHER / ethToUsdExchangeRate; // Returns how much Wei one USD is worth
 ---
 >     function getWeiToUsdExchangeRate() public returns(uint) {
 >         return 1 ether / ethToUsdExchangeRate; // Returns how much Wei one USD is worth
-142,144c172
+142,144c175
 <     function updateEthToUsdExchangeRate(uint newEthToUsdExchangeRate)
 <     {
 <         require((msg.sender == contractOwner) || (msg.sender == accountWithUpdatePermissions)); // Verify ownership
 ---
 >     function updateEthToUsdExchangeRate(uint newEthToUsdExchangeRate) public onlyPermissioned {
-148,150c176
+148,150c179
 <     function updateSnipCoinToEtherExchangeRate(uint newSnipCoinToEtherExchangeRate)
 <     {
 <         require((msg.sender == contractOwner) || (msg.sender == accountWithUpdatePermissions)); // Verify ownership
 ---
 >     function updateSnipCoinToEtherExchangeRate(uint newSnipCoinToEtherExchangeRate) public onlyPermissioned {
-154,156c180
+154,156c183
 <     function openOrCloseSale(bool saleCondition)
 <     {
 <         require((msg.sender == contractOwner) || (msg.sender == accountWithUpdatePermissions)); // Verify ownership
 ---
 >     function openOrCloseSale(bool saleCondition) public onlyPermissioned {
-160,162c184
+160,162c187
 <     function addAddressToCappedAddresses(address addr)
 <     {
 <         require((msg.sender == contractOwner) || (msg.sender == accountWithUpdatePermissions)); // Verify ownership
 ---
 >     function addAddressToCappedAddresses(address addr) public onlyPermissioned {
-166,168c188
+166,168c191
 <     function addAddressToUncappedAddresses(address addr)
 <     {
 <         require((msg.sender == contractOwner) || (msg.sender == accountWithUpdatePermissions)); // Verify ownership
 ---
 >     function addAddressToUncappedAddresses(address addr) public onlyPermissioned {
-172,211c192,196
+172,211c195,199
 <     function SnipCoin()
 <     {
 <         initializeSaleWalletAddress();
@@ -280,9 +287,162 @@ ENDTIME         = '1506215189' 'Sun 24 Sep 2017 01:06:29 UTC'
 >         balances[contractOwner] -= tokens;
 >         balances[msg.sender] += tokens;
 >         Transfer(contractOwner, msg.sender, tokens);
-213,214d197
+213,214d200
 <         saleWalletAddress.transfer(msg.value); // Transfer ether to safe sale address
 <         transferFrom(contractOwner, msg.sender, uint(snipCoinToEtherExchangeRate * msg.value / WEI_IN_ETHER)); // Send tokens to buyer according to ratio
-216a200,201
+216a203,204
 > 
 >         saleWalletAddress.transfer(msg.value); // Transfer ether to safe sale address
+Welcome to the Geth JavaScript console!
+
+instance: Geth/v1.7.0-stable-6c6c7b2a/darwin-amd64/go1.7.1
+coinbase: 0xa00af22d07c87d96eeeb0ed583f8f6ac7812827e
+at block: 1293 (Sun, 24 Sep 2017 14:54:58 AEST)
+ datadir: /Users/bok/Projects/SnipCoinTokenContractAudit/audit/test/testchain
+ modules: admin:1.0 debug:1.0 eth:1.0 miner:1.0 net:1.0 personal:1.0 rpc:1.0 txpool:1.0 web3:1.0
+
+> 
+true
+> 
+true
+> 
+> 
+undefined
+> 
+undefined
+> 
+> 
+undefined
+> 
+undefined
+> 
+> 
+undefined
+> 
+RESULT:  # Account                                             EtherBalanceChange                          Token Name
+RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
+RESULT:  0 0xa00af22d07c87d96eeeb0ed583f8f6ac7812827e       35.000000000000000000           0.00000000 Account #0 - Miner
+RESULT:  1 0xa11aae29840fbb5c86e6fd4cf809eba183aef433        0.000000000000000000           0.00000000 Account #1 - Contract Owner
+RESULT:  2 0xa22ab8a9d641ce77e06d98b7d7065d324d3d6976        0.000000000000000000           0.00000000 Account #2 - Wallet
+RESULT:  3 0xa33a6c312d9ad0e0f2e95541beed0cc081621fd0        0.000000000000000000           0.00000000 Account #3 - Prealloc
+RESULT:  4 0xa44a08d3f6933c69212114bb66e2df1813651844        0.000000000000000000           0.00000000 Account #4 - Prealloc
+RESULT:  5 0xa55a151eb00fded1634d27d1127b4be4627079ea        0.000000000000000000           0.00000000 Account #5
+RESULT:  6 0xa66a85ede0cbe03694aa9d9de0bb19c99ff55bd9        0.000000000000000000           0.00000000 Account #6
+RESULT:  7 0xa77a2b9d4b1c010a22a7c565dc418cef683dbcec        0.000000000000000000           0.00000000 Account #7
+RESULT:  8 0xa88a05d2b88283ce84c8325760b72a64591279a2        0.000000000000000000           0.00000000 Account #8
+RESULT:  9 0xa99a0ae3354c06b1459fd441a32a3f71005d7da0        0.000000000000000000           0.00000000 Account #9 - Vested 1 Tokens
+RESULT: 10 0xaaaa9de1e6c564446ebca0fd102d8bd92093c756        0.000000000000000000           0.00000000 Account #10 - Vested 2 Tokens
+RESULT: 11 0xABcdEFABcdEFabcdEfAbCdefabcdeFABcDEFabCD        0.000000000000000000           0.00000000 Locked Tokens
+RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
+RESULT:                                                                                     0.00000000 Total Token Balances
+RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
+RESULT: 
+undefined
+> 
+RESULT: 
+undefined
+> 
+> 
+> 
+undefined
+> 
+undefined
+> 
+undefined
+> 
+RESULT: Deploy Crowdsale/Token Contract
+undefined
+> 
+undefined
+> 
+undefined
+> 
+undefined
+> 
+undefined
+> 
+> 
+... 
+...... 
+......... 
+............ 
+............ 
+............ 
+............ 
+............ 
+............ 
+............ 
+......... 
+...... 
+... 
+undefined
+> 
+> 
+... 
+undefined
+> 
+> 
+DATA: tokenAddress=0xf4441f10804b35b13bad1e664e32237773276253
+RESULT: tokenAddress=0xf4441f10804b35b13bad1e664e32237773276253 gas=6000000 gasUsed=1390731 costETH=0.025033158 costUSD=9.52236297162 @ ETH/USD=380.39 gasPrice=18000000000 block=1302 txIx=0 txId=0x71a14ec2dbffcd658bd9b053b785b816c9342c41dc88f387fd3d7cffb1b76890
+undefined
+> 
+RESULT:  # Account                                             EtherBalanceChange                          Token Name
+RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
+RESULT:  0 0xa00af22d07c87d96eeeb0ed583f8f6ac7812827e       45.025033158000000000           0.000000000000000000 Account #0 - Miner
+RESULT:  1 0xa11aae29840fbb5c86e6fd4cf809eba183aef433       -0.025033158000000000 10000000000.000000000000000000 Account #1 - Contract Owner
+RESULT:  2 0xa22ab8a9d641ce77e06d98b7d7065d324d3d6976        0.000000000000000000           0.000000000000000000 Account #2 - Wallet
+RESULT:  3 0xa33a6c312d9ad0e0f2e95541beed0cc081621fd0        0.000000000000000000           0.000000000000000000 Account #3 - Prealloc
+RESULT:  4 0xa44a08d3f6933c69212114bb66e2df1813651844        0.000000000000000000           0.000000000000000000 Account #4 - Prealloc
+RESULT:  5 0xa55a151eb00fded1634d27d1127b4be4627079ea        0.000000000000000000           0.000000000000000000 Account #5
+RESULT:  6 0xa66a85ede0cbe03694aa9d9de0bb19c99ff55bd9        0.000000000000000000           0.000000000000000000 Account #6
+RESULT:  7 0xa77a2b9d4b1c010a22a7c565dc418cef683dbcec        0.000000000000000000           0.000000000000000000 Account #7
+RESULT:  8 0xa88a05d2b88283ce84c8325760b72a64591279a2        0.000000000000000000           0.000000000000000000 Account #8
+RESULT:  9 0xa99a0ae3354c06b1459fd441a32a3f71005d7da0        0.000000000000000000           0.000000000000000000 Account #9 - Vested 1 Tokens
+RESULT: 10 0xaaaa9de1e6c564446ebca0fd102d8bd92093c756        0.000000000000000000           0.000000000000000000 Account #10 - Vested 2 Tokens
+RESULT: 11 0xABcdEFABcdEFabcdEfAbCdefabcdeFABcDEFabCD        0.000000000000000000           0.000000000000000000 Locked Tokens
+RESULT: 12 0xf4441f10804b35b13bad1e664e32237773276253        0.000000000000000000           0.000000000000000000 Token 'SNIP' 'SnipCoin'
+RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
+RESULT:                                                                           10000000000.000000000000000000 Total Token Balances
+RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------
+RESULT: 
+undefined
+> 
+RESULT: PASS Deploy Crowdsale/Token Contract
+1
+> 
+RESULT: tokenContractAddress=0xf4441f10804b35b13bad1e664e32237773276253
+RESULT: token.totalSupply=10000000000
+RESULT: token.name=SnipCoin
+RESULT: token.symbol=SNIP
+RESULT: token.decimals=18
+RESULT: token.totalEthReceivedInWei=14500
+RESULT: token.totalUsdReceived=4000000
+RESULT: token.version=1.0
+RESULT: token.saleWalletAddress=0x686f152dad6490df93b267e319f875a684bd26e2
+RESULT: token.snipCoinToEtherExchangeRate=300000
+RESULT: token.isSaleOpen=false
+RESULT: token.ethToUsdExchangeRate=285
+RESULT: token.contractOwner=0xa11aae29840fbb5c86e6fd4cf809eba183aef433
+RESULT: token.accountWithUpdatePermissions=0x686f152dad6490df93b267e319f875a684bd26e2
+RESULT: token.DECIMALS_MULTIPLIER=1000000000000000000
+RESULT: token.SALE_CAP_IN_USD=8000000
+RESULT: token.MINIMUM_PURCHASE_IN_USD=50
+RESULT: token.USD_PURCHASE_AMOUNT_REQUIRING_ID=4500
+Error: invalid address
+    at web3.js:3879:15
+    at web3.js:3705:20
+    at web3.js:4948:28
+    at map (<native code>)
+    at web3.js:4947:12
+    at web3.js:4973:18
+    at web3.js:4998:23
+    at web3.js:4061:16
+    at apply (<native code>)
+    at web3.js:4147:16
+
+> 
+RESULT: 
+undefined
+> 
+> 
+> 

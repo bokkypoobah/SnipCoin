@@ -3,7 +3,10 @@ pragma solidity ^0.4.15;
 contract Token {
 
     /// @return total amount of tokens
-    function totalSupply() public constant returns (uint supply);
+    // function totalSupply() public constant returns (uint supply);
+    // `totalSupply` is defined below because the automatically generated
+    // getter function does not match the abstract function above
+    uint public totalSupply;
 
     /// @param _owner The address from which the balance will be retrieved
     /// @return The balance
@@ -42,7 +45,7 @@ contract StandardToken is Token {
 
     function transfer(address _to, uint _value) public returns (bool success) {
         if (balances[msg.sender] >= _value &&          // Account has sufficient balance
-            balances[_to] + _value > balances[_to]) {  // Overflow check
+            balances[_to] + _value >= balances[_to]) { // Overflow check
             balances[msg.sender] -= _value;
             balances[_to] += _value;
             Transfer(msg.sender, _to, _value);
@@ -53,7 +56,7 @@ contract StandardToken is Token {
     function transferFrom(address _from, address _to, uint _value) public returns (bool success) {
         if (balances[_from] >= _value &&                // Account has sufficient balance
             allowed[_from][msg.sender] >= _value &&     // Amount has been approved
-            balances[_to] + _value > balances[_to]) {   // Overflow check
+            balances[_to] + _value >= balances[_to]) {  // Overflow check
             balances[_from] -= _value;
             allowed[_from][msg.sender] -= _value;
             balances[_to] += _value;
@@ -78,7 +81,6 @@ contract StandardToken is Token {
 
     mapping (address => uint) balances;
     mapping (address => mapping (address => uint)) allowed;
-    uint public totalSupply;
 }
 
 // Based on TokenFactory(https://github.com/ConsenSys/Token-Factory)
@@ -100,11 +102,11 @@ contract SnipCoin is StandardToken {
     bool public isSaleOpen = false;                   // This opens and closes upon external command
     uint public ethToUsdExchangeRate = 285;           // Number of USD in one Eth
 
-    address private contractOwner;                    // Address of the contract owner
+    address public contractOwner;                    // Address of the contract owner
     // Address of an additional account to manage the sale without risk to the tokens or eth. Change before the sale
-    address private accountWithUpdatePermissions = 0x686f152daD6490DF93B267E319f875A684Bd26e2;
+    address public accountWithUpdatePermissions = 0x686f152daD6490DF93B267E319f875A684Bd26e2;
 
-    uint private constant DECIMALS_MULTIPLIER = 10**uint(decimals);  // Multiplier for the decimals
+    uint public constant DECIMALS_MULTIPLIER = 10**uint(decimals);   // Multiplier for the decimals
     uint public constant SALE_CAP_IN_USD = 8000000;                  // The total sale cap in USD
     uint public constant MINIMUM_PURCHASE_IN_USD = 50;               // It is impossible to purchase tokens for more than $50 in the sale.
     uint public constant USD_PURCHASE_AMOUNT_REQUIRING_ID = 4500;    // Above this purchase amount an ID is required.
@@ -146,7 +148,8 @@ contract SnipCoin is StandardToken {
 
         contractOwner = msg.sender;                      // The creator of the contract is its owner
         totalSupply = 10000000000 * DECIMALS_MULTIPLIER; // In total, 10 billion tokens
-        balances[msg.sender] = totalSupply;              // Initially give owner all of the tokens 
+        balances[contractOwner] = totalSupply;           // Initially give owner all of the tokens 
+        Transfer(0x0, contractOwner, totalSupply);
     }
 
     function initializeSaleWalletAddress() internal {

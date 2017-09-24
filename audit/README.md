@@ -171,6 +171,8 @@ For an example, see [test/modifiedContracts/SnipCoin.sol](test/modifiedContracts
   no access modifiers specified. Anyone can call these functions anytime to reset these variables. Mark these functions as `internal`
   to prevent these functions being executed by anyone
 
+* **MEDIUM IMPORTANCE** The functions `getBalance(...)`, `getWeiToUsdExchangeRate()` should be marked `constant` 
+
 * **LOW IMPORTANCE** Fix the compiler warnings - unused variables. Replace the empty function body `{}` with a `;` for the
   *Token* interface to declare the functions as un-implemented functions that will be overridden in the derived contract.
 

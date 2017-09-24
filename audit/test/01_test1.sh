@@ -69,14 +69,12 @@ echo "$DIFFS1" | tee -a $TEST1OUTPUT
 
 echo "var tokenOutput=`solc --optimize --combined-json abi,bin,interface $CROWDSALESOL`;" > $CROWDSALEJS
 
-exit;
-
 geth --verbosity 3 attach $GETHATTACHPOINT << EOF | tee -a $TEST1OUTPUT
 loadScript("$CROWDSALEJS");
 loadScript("functions.js");
 
-var tokenAbi = JSON.parse(tokenOutput.contracts["$CROWDSALESOL:Gimli"].abi);
-var tokenBin = "0x" + tokenOutput.contracts["$CROWDSALESOL:Gimli"].bin;
+var tokenAbi = JSON.parse(tokenOutput.contracts["$CROWDSALESOL:SnipCoin"].abi);
+var tokenBin = "0x" + tokenOutput.contracts["$CROWDSALESOL:SnipCoin"].bin;
 
 // console.log("DATA: tokenAbi=" + JSON.stringify(tokenAbi));
 // console.log("DATA: tokenBin=" + JSON.stringify(tokenBin));
@@ -118,6 +116,9 @@ printBalances();
 failIfGasEqualsGasUsed(tokenTx, tokenMessage);
 printTokenContractDetails();
 console.log("RESULT: ");
+
+
+exit;
 
 
 // -----------------------------------------------------------------------------

@@ -67,8 +67,8 @@ function printBalances() {
   var decimals = token == null ? 8 : token.decimals();
   var i = 0;
   var totalTokenBalance = new BigNumber(0);
-  console.log("RESULT:  # Account                                             EtherBalanceChange                Token Name");
-  console.log("RESULT: -- ------------------------------------------ --------------------------- -------------------- ---------------------------");
+  console.log("RESULT:  # Account                                             EtherBalanceChange                          Token Name");
+  console.log("RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------");
   accounts.forEach(function(e) {
     var etherBalanceBaseBlock = eth.getBalance(e, baseBlock);
     var etherBalance = web3.fromWei(eth.getBalance(e).minus(etherBalanceBaseBlock), "ether");
@@ -77,9 +77,9 @@ function printBalances() {
     console.log("RESULT: " + pad2(i) + " " + e  + " " + pad(etherBalance) + " " + padToken(tokenBalance, decimals) + " " + accountNames[e]);
     i++;
   });
-  console.log("RESULT: -- ------------------------------------------ --------------------------- -------------------- ---------------------------");
+  console.log("RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------");
   console.log("RESULT:                                                                           " + padToken(totalTokenBalance, decimals) + " Total Token Balances");
-  console.log("RESULT: -- ------------------------------------------ --------------------------- -------------------- ---------------------------");
+  console.log("RESULT: -- ------------------------------------------ --------------------------- ------------------------------ ---------------------------");
   console.log("RESULT: ");
 }
 
@@ -189,31 +189,24 @@ function printTokenContractDetails() {
   if (tokenContractAddress != null && tokenContractAbi != null) {
     var contract = eth.contract(tokenContractAbi).at(tokenContractAddress);
     var decimals = contract.decimals();
-    console.log("RESULT: token.owner=" + contract.owner());
-    console.log("RESULT: token.MULTISIG_WALLET_ADDRESS=" + contract.MULTISIG_WALLET_ADDRESS());
-    console.log("RESULT: token.symbol=" + contract.symbol());
-    console.log("RESULT: token.name=" + contract.name());
-    console.log("RESULT: token.version=" + contract.version());
-    console.log("RESULT: token.decimals=" + decimals);
     console.log("RESULT: token.totalSupply=" + contract.totalSupply().shift(-decimals));
-    var startDate = contract.START_DATE();
-    console.log("RESULT: token.START_DATE=" + startDate + " " + new Date(startDate * 1000).toUTCString());
-    var endDate = contract.END_DATE();
-    console.log("RESULT: token.END_DATE=" + endDate + " " + new Date(endDate * 1000).toUTCString());
-    var vesting1Date = contract.VESTING_1_DATE();
-    console.log("RESULT: token.VESTING_1_DATE=" + vesting1Date + " " + new Date(vesting1Date * 1000).toUTCString());
-    var vesting2Date = contract.VESTING_2_DATE();
-    console.log("RESULT: token.VESTING_2_DATE=" + vesting2Date + " " + new Date(vesting2Date * 1000).toUTCString());
-    console.log("RESULT: token.CROWDSALE_PRICE=" + contract.CROWDSALE_PRICE());
-    console.log("RESULT: token.TOTAL_SUPPLY=" + contract.TOTAL_SUPPLY().shift(-decimals));
-    console.log("RESULT: token.CROWDSALE_AMOUNT=" + contract.CROWDSALE_AMOUNT().shift(-decimals));
-    console.log("RESULT: token.VESTING_1_AMOUNT=" + contract.VESTING_1_AMOUNT().shift(-decimals));
-    console.log("RESULT: token.VESTING_2_AMOUNT=" + contract.VESTING_2_AMOUNT().shift(-decimals));
-    console.log("RESULT: token.vesting1Withdrawn=" + contract.vesting1Withdrawn());
-    console.log("RESULT: token.vesting2Withdrawn=" + contract.vesting2Withdrawn());
-    console.log("RESULT: token.crowdsaleCanceled=" + contract.crowdsaleCanceled());
-    console.log("RESULT: token.soldAmount=" + contract.soldAmount().shift(-decimals));
-    console.log("RESULT: token.transferable=" + contract.transferable());
+    console.log("RESULT: token.name=" + contract.name());
+    console.log("RESULT: token.symbol=" + contract.symbol());
+    console.log("RESULT: token.decimals=" + decimals);
+    console.log("RESULT: token.totalEthReceivedInWei=" + contract.totalEthReceivedInWei().shift(-18));
+    console.log("RESULT: token.totalUsdReceived=" + contract.totalUsdReceived());
+    console.log("RESULT: token.version=" + contract.version());
+    console.log("RESULT: token.saleWalletAddress=" + contract.saleWalletAddress());
+    console.log("RESULT: token.snipCoinToEtherExchangeRate=" + contract.snipCoinToEtherExchangeRate());
+    console.log("RESULT: token.isSaleOpen=" + contract.isSaleOpen());
+    console.log("RESULT: token.ethToUsdExchangeRate=" + contract.ethToUsdExchangeRate());
+    console.log("RESULT: token.contractOwner=" + contract.contractOwner());
+    console.log("RESULT: token.accountWithUpdatePermissions=" + contract.accountWithUpdatePermissions());
+    console.log("RESULT: token.DECIMALS_MULTIPLIER=" + contract.DECIMALS_MULTIPLIER());
+    console.log("RESULT: token.SALE_CAP_IN_USD=" + contract.SALE_CAP_IN_USD());
+    console.log("RESULT: token.MINIMUM_PURCHASE_IN_USD=" + contract.MINIMUM_PURCHASE_IN_USD());
+    console.log("RESULT: token.USD_PURCHASE_AMOUNT_REQUIRING_ID=" + contract.USD_PURCHASE_AMOUNT_REQUIRING_ID());
+    console.log("RESULT: token.getWeiToUsdExchangeRate=" + contract.getWeiToUsdExchangeRate());
 
     var latestBlock = eth.blockNumber;
     var i;
