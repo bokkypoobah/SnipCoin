@@ -1,6 +1,6 @@
 # SnipCoin Token Contract Audit
 
-Status: There are a few outstanding low importance optional changes that were recommended and are being considered.
+Status: Report completed, with one low importance improvement outstanding
 
 <br />
 
@@ -17,8 +17,9 @@ This audit has been conducted on Snip's source code in commits
 [f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43),
 [94ffa4d](https://github.com/SnipToday/SnipCoin/commit/94ffa4d4a3750c0cf584ac63a1df464dd4d6c3dc),
 [07a5991](https://github.com/SnipToday/SnipCoin/commit/07a5991327b7c26e040e319aa67205ff96697a7d),
-[a5c4d0d](https://github.com/SnipToday/SnipCoin/commit/a5c4d0d32dcfeb9aa120a208c4ba285fdacabe60) and
-[4cda853](https://github.com/SnipToday/SnipCoin/commit/4cda85368a553832b01e16ebfcff43c816ed6b02).
+[a5c4d0d](https://github.com/SnipToday/SnipCoin/commit/a5c4d0d32dcfeb9aa120a208c4ba285fdacabe60),
+[4cda853](https://github.com/SnipToday/SnipCoin/commit/4cda85368a553832b01e16ebfcff43c816ed6b02) and
+[bf168d8](https://github.com/SnipToday/SnipCoin/commit/bf168d8e22fa6b73792513e6ce4e611a2f8209eb).
 
 No potential vulnerabilities have been identified in the crowdsale and token contract.
 
@@ -54,12 +55,12 @@ compliant with the following features:
 * `decimals` is correctly defined as `uint8` instead of `uint256`
 * `name` is `SnipCoin`
 * `symbol` is `SNIP`
-* `transfer(...)` and `transferFrom(...)` will return false if there is an error instead of throwing an error. A 0 value transfer will
+* `transfer(...)` and `transferFrom(...)` will return throw if there is an error instead of returning false. A 0 value transfer will
   return true
 * `transfer(...)` and `transferFrom(...)` have not been built with a check on the size of the data being passed. This check is
   not an effective check anyway - refer to [Smart
   Contract Short Address Attack Mitigation Failure](https://blog.coinfabrik.com/smart-contract-short-address-attack-mitigation-failure/)
-* `approve(...)` does not require that a non-zero approval limit be set to 0 before a new non-zero limit can be set. Refer to
+* `approve(...)` does requires that a non-zero approval limit be set to 0 before a new non-zero limit can be set. Refer to
   [this](https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729) for further information
 
 This *SnipCoin* token contract does not use *SafeMath* but has the checks to prevent unsigned integer math overflows and underflows.
@@ -86,6 +87,7 @@ This *SnipCoin* token contract does not use *SafeMath* but has the checks to pre
   * [Contribution From Capped And Uncapped Whitelisted Accounts](#contribution-from-capped-and-uncapped-whitelisted-accounts)
   * [Contribution From Uncapped Whitelisted Accounts To Max USD Cap](#contribution-from-uncapped-whitelisted-accounts-to-max-usd-cap)
   * [Contribution From Capped Whitelisted Accounts To Account Cap](#contribution-from-capped-whitelisted-accounts-to-account-cap)
+  * [New ERC20 Standard](#new-erc20-standard)
 * [Code Review](#code-review)
 
 <br />
@@ -341,9 +343,15 @@ For an example, see [test/modifiedContracts/SnipCoin_secondreview_example.sol](t
 * **LOW IMPORTANCE** Some of the recent tokens have a requirement that a non-0 approval amount must be set to 0 before being able to set it
   to a new non-0 approval amount. See [GimliToken.sol](https://github.com/bokkypoobah/GimliTokenContractAudit/blob/master/sol/GimliToken.sol#L79-L83)
   for an example, including the linked comment
-  
+
+  * [x] Fixed in [bf168d8](https://github.com/SnipToday/SnipCoin/commit/bf168d8e22fa6b73792513e6ce4e611a2f8209eb)
+
 * **LOW IMPORTANCE** The `transfer(...)` and `transferFrom(...)` return a false if the transfer fails. Some of the newer tokens throw
   an error instead of returning false - search for "throw" in the [ERC20 standard](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md)
+
+  * [x] Fixed in [bf168d8](https://github.com/SnipToday/SnipCoin/commit/bf168d8e22fa6b73792513e6ce4e611a2f8209eb)
+
+* **LOW IMPORTANCE** Fix compiler warning from using `throw` in `transfer(...)` and `transferFrom(...)` instead of `revert()`
 
 <br />
 
@@ -453,6 +461,22 @@ in [test/test3results.txt](test/test3results.txt) and the detailed output saved 
 * [x] Contribute from capped account to just below the capped amount
 * [x] Contribute from uncapped account to just above the capped amount - contribution rejected
 * [x] Contribute from uncapped account to the capped amount
+
+<br />
+
+### New ERC20 Standard
+
+The following functions were tested using the script [test/04_test4.sh](test/04_test4.sh) with the summary results saved
+in [test/test4results.txt](test/test4results.txt) and the detailed output saved in [test/test4output.txt](test/test4output.txt):
+
+* [x] Deploy Crowdsale/Token contract
+* [x] Add accounts to capped and uncapped whitelists
+* [x] Open crowdsale
+* [x] Contribute from capped and uncapped accounts
+* [x] Transfer 0 tokens - NOT thrown
+* [x] Transfer more tokens than accounts own - thrown
+* [x] Change approval without setting to 0 - thrown
+* [x] Change approval by setting to 0 first - NOT thrown
 
 <br />
 
