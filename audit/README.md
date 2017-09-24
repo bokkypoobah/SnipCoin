@@ -178,6 +178,9 @@ For an example, see [test/modifiedContracts/SnipCoin.sol](test/modifiedContracts
           function totalSupply() constant returns (uint256 supply) {}
                                                    ^------------^
 
+  Note that in the example, `uint public totalSupply` is defined in *Token* because the automatically generated getter function
+  does not match the abstract function `function totalSupply() constant returns (uint256 supply);`
+
 * **LOW IMPORTANCE** Use `uint` or `uint256` consistently, not both
 
 * **LOW IMPORTANCE** Consider moving `require((msg.sender == contractOwner) || (msg.sender == accountWithUpdatePermissions)); // Verify ownership`
@@ -207,9 +210,14 @@ For an example, see [test/modifiedContracts/SnipCoin.sol](test/modifiedContracts
   `balances[msg.sender] = totalSupply;` in the `SnipCoin.SnipCoin()` constructor as this explicitly states that the tokens
   are all initially assigned to the `contractOwner`
 
-* **LOW IMPORTANCE** The new [ERC20 standard](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md#transfer) states that
-  `Note Transfers of 0 values MUST be treated as normal transfers and fire the Transfer event.`. Consider updating
+* **LOW IMPORTANCE** The recently standardised [ERC20 standard](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md#transfer)
+   states that `Note Transfers of 0 values MUST be treated as normal transfers and fire the Transfer event.`. Consider updating
   `transfer(...)` and `transferFrom(...)` to treat 0 transfers as valid transfers
+
+  The recently standardised ERC20 standard also states that
+  `The function SHOULD throw if the _from account balance does not have enough tokens to spend.` for the `transfer(...)` function, and
+  `The function SHOULD throw unless the _from account has deliberately authorized the sender of the message via some mechanism.` for
+  the `transferFrom(...)` function. This `throw` behaviour has not been implemented in the example.
 
 <br />
 

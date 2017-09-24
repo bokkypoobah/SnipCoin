@@ -3,7 +3,10 @@ pragma solidity ^0.4.15;
 contract Token {
 
     /// @return total amount of tokens
-    function totalSupply() public constant returns (uint supply);
+    // function totalSupply() public constant returns (uint supply);
+    // `totalSupply` is defined below because the automatically generated
+    // getter function does not match the abstract function above
+    uint public totalSupply;
 
     /// @param _owner The address from which the balance will be retrieved
     /// @return The balance
@@ -78,7 +81,6 @@ contract StandardToken is Token {
 
     mapping (address => uint) balances;
     mapping (address => mapping (address => uint)) allowed;
-    uint public totalSupply;
 }
 
 // Based on TokenFactory(https://github.com/ConsenSys/Token-Factory)
