@@ -134,140 +134,221 @@ contract StandardToken is Token {
 
 // Based on TokenFactory(https://github.com/ConsenSys/Token-Factory)
 
+// BK Ok
 contract SnipCoin is StandardToken {
 
+    // BK Next 3 Ok
     string public constant name = "SnipCoin";         // Token name
     string public symbol = "SNIP";                    // Token identifier
     uint8 public constant decimals = 18;              // Decimal points for token
+    // BK Next 2 Ok
     uint public totalEthReceivedInWei;                // The total amount of Ether received during the sale in WEI
     uint public totalUsdReceived;                     // The total amount of Ether received during the sale in USD terms
+    // BK Ok
     string public version = "1.0";                    // Code version
+    // BK NOTE - Safer that this is different to accountWithUpdatePermissions or contractOwner
+    // BK Ok
     address public saleWalletAddress;                 // The wallet address where the Ether from the sale will be stored
 
+    // BK Next 2 Ok
     mapping (address => bool) uncappedBuyerList;      // The list of buyers allowed to participate in the sale without a cap
     mapping (address => bool) cappedBuyerList;        // The list of buyers allowed to participate in the sale
 
+    // BK Ok
     uint public snipCoinToEtherExchangeRate = 300000; // This is the ratio of SnipCoin to Ether, could be updated by the owner
+    // BK Next 2 Ok
     bool public isSaleOpen = false;                   // This opens and closes upon external command
     bool public transferable = false;                 // Tokens are transferable
 
+    // BK Ok
     uint public ethToUsdExchangeRate = 285;           // Number of USD in one Eth
 
+    // BK Ok
     address public contractOwner;                     // Address of the contract owner
     // Address of an additional account to manage the sale without risk to the tokens or eth. Change before the sale
+    // BK Ok
     address public accountWithUpdatePermissions = 0x686f152daD6490DF93B267E319f875A684Bd26e2;
 
+    // BK Ok
     uint public constant DECIMALS_MULTIPLIER = 10**uint(decimals);   // Multiplier for the decimals
+    // BK Ok
     uint public constant SALE_CAP_IN_USD = 8000000;                  // The total sale cap in USD
+    // BK Ok
     uint public constant MINIMUM_PURCHASE_IN_USD = 50;               // It is impossible to purchase tokens for more than $50 in the sale.
+    // BK Ok
     uint public constant USD_PURCHASE_AMOUNT_REQUIRING_ID = 4500;    // Above this purchase amount an ID is required.
 
+    // BK Ok
     modifier onlyPermissioned() {
+        // BK Ok
         require((msg.sender == contractOwner) || (msg.sender == accountWithUpdatePermissions));
+        // BK Ok
         _;
     }
 
+    // BK Ok
     modifier verifySaleNotOver() {
+        // BK Ok
         require(isSaleOpen);
+        // BK Ok
         require(totalUsdReceived < SALE_CAP_IN_USD); // Make sure that sale isn't over
+        // BK OK
         _;
     }
 
+    // BK Ok
     modifier verifyBuyerCanMakePurchase() {
+        // BK Ok
         uint purchaseValueInUSD = uint(msg.value / getWeiToUsdExchangeRate()); // The USD worth of tokens sold
 
+        // BK OK
         require(purchaseValueInUSD > MINIMUM_PURCHASE_IN_USD); // Minimum transfer is of $50
 
+        // BK Ok
         uint EFFECTIVE_MAX_CAP = SALE_CAP_IN_USD + 1000;  // This allows for the end of the sale by passing $8M and reaching the cap
+        // BK Ok
         require(EFFECTIVE_MAX_CAP - totalUsdReceived > purchaseValueInUSD); // Make sure that there is enough usd left to buy.
 
+        // BK Ok
         if (purchaseValueInUSD >= USD_PURCHASE_AMOUNT_REQUIRING_ID) // Check if buyer is on uncapped white list
         {
+            // BK Ok
             require(uncappedBuyerList[msg.sender]);
         }
+        // BK Ok
         if (purchaseValueInUSD < USD_PURCHASE_AMOUNT_REQUIRING_ID) // Check if buyer is on capped white list
         {
+            // BK Ok
             require(cappedBuyerList[msg.sender] || uncappedBuyerList[msg.sender]);
         }
+        // BK Ok
         _;
     }
 
+    // BK OK - Constructor
     function SnipCoin() public {
+        // BK Next 3 Ok
         initializeSaleWalletAddress();
         initializeEthReceived();
         initializeUsdReceived();
 
+        // BK Ok
         contractOwner = msg.sender;                      // The creator of the contract is its owner
+        // BK Ok
         totalSupply = 10000000000 * DECIMALS_MULTIPLIER; // In total, 10 billion tokens
+        // BK Ok
         balances[contractOwner] = totalSupply;           // Initially give owner all of the tokens 
+        // BK Ok - Log event 
         Transfer(0x0, contractOwner, totalSupply);
     }
 
+    // BK Ok - Internal function
     function initializeSaleWalletAddress() internal {
+        // BK Ok
         saleWalletAddress = 0x686f152daD6490DF93B267E319f875A684Bd26e2; // Change before the sale
     }
 
+    // BK Ok - Internal function
     function initializeEthReceived() internal {
+        // BK Ok
         totalEthReceivedInWei = 14500 * 1 ether; // Ether received before public sale. Verify this figure before the sale starts.
     }
 
+    // BK Ok - Internal function
     function initializeUsdReceived() internal {
+        // BK Ok
         totalUsdReceived = 4000000; // USD received before public sale. Verify this figure before the sale starts.
     }
 
+    // BK NOTE - This is a duplicate of balanceOf(...)
+    // BK Ok - Constant function
     function getBalance(address addr) public constant returns(uint) {
+        // BK Ok
         return balances[addr];
     }
 
+    // BK NOTE - ethToUsdExchangeRate should be set to a sensible value and not be 0, or this will cause a division by 0 error
+    // BK Ok
     function getWeiToUsdExchangeRate() public constant returns(uint) {
+        // BK Ok
         return 1 ether / ethToUsdExchangeRate; // Returns how much Wei one USD is worth
     }
 
+    // BK Ok - Only permissioned accounts can execute this function
     function updateEthToUsdExchangeRate(uint newEthToUsdExchangeRate) public onlyPermissioned {
+        // BK Ok
         ethToUsdExchangeRate = newEthToUsdExchangeRate; // Change exchange rate to new value, influences the counter of when the sale is over.
     }
 
+    // BK Ok - Only permissioned accounts can execute this function
     function updateSnipCoinToEtherExchangeRate(uint newSnipCoinToEtherExchangeRate) public onlyPermissioned {
+        // BK Ok
         snipCoinToEtherExchangeRate = newSnipCoinToEtherExchangeRate; // Change the exchange rate to new value, influences tokens received per purchase
     }
 
+    // BK NOTE - The sale will initially need to be opened (isSaleOpen set to true)
+    // BK NOTE - The sale will have to be closed (isSaleOpen set to false)
+    // BK NOTE - The token can then be transferable (transferable set to true)
+    // BK Ok - Only permissioned accounts can execute this function
     function openOrCloseSale(bool saleCondition) public onlyPermissioned {
+        // BK Ok
         require(!transferable);
+        // BK Ok
         isSaleOpen = saleCondition; // Decide if the sale should be open or closed (default: closed)
     }
 
+    // BK NOTE - This function can only be executed when the sale is closed (isSaleOpen set to false)
+    // BK Ok - Only permissioned accounts can execute this function
     function allowTransfers() public onlyPermissioned {
+        // BK Ok
         require(!isSaleOpen);
+        // BK Ok
         transferable = true;
     }
 
+    // BK Ok - Only permissioned accounts can execute this function
     function addAddressToCappedAddresses(address addr) public onlyPermissioned {
+        // BK Ok
         cappedBuyerList[addr] = true; // Allow a certain address to purchase SnipCoin up to the cap (<4500)
     }
 
+    // BK Ok - Only permissioned accounts can execute this function
     function addAddressToUncappedAddresses(address addr) public onlyPermissioned {
+        // BK Ok
         uncappedBuyerList[addr] = true; // Allow a certain address to purchase SnipCoin above the cap (>=$4500)
     }
 
+    // BK Ok
     function transfer(address _to, uint _value) public returns (bool success) {
+        // BK Ok
         require(transferable);
+        // BK Ok
         return super.transfer(_to, _value);
     }
 
+    // BK Ok
     function transferFrom(address _from, address _to, uint _value) public returns (bool success) {
+        // BK Ok
         require(transferable);
+        // BK Ok
         return super.transferFrom(_from, _to, _value);
     }
 
+    // BK Ok
     function () public payable verifySaleNotOver verifyBuyerCanMakePurchase {
+        // BK Ok
         uint tokens = snipCoinToEtherExchangeRate * msg.value;
+        // BK Next 2 Ok
         balances[contractOwner] -= tokens;
         balances[msg.sender] += tokens;
+        // BK Ok - Log event
         Transfer(contractOwner, msg.sender, tokens);
 
+        // BK Next 2 Ok
         totalEthReceivedInWei = totalEthReceivedInWei + msg.value; // total eth received counter
         totalUsdReceived = totalUsdReceived + msg.value / getWeiToUsdExchangeRate(); // total usd received counter
 
+        // BK Ok
         saleWalletAddress.transfer(msg.value); // Transfer ether to safe sale address
     }
 }

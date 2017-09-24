@@ -1,22 +1,60 @@
 # SnipCoin Token Contract Audit
 
-[https://www.snip.today/](https://www.snip.today/)
-
-[https://www.snip.network/sale/signup/?next=/sale/](https://www.snip.network/sale/signup/?next=/sale/)
-
-Status: Work in progress
-
-Commits
-[547c295](https://github.com/SnipToday/SnipCoin/commit/547c295895700ce44ab5d63cab506978e2f01634),
-[022fbf8](https://github.com/SnipToday/SnipCoin/commit/022fbf8f901cba0dcffe8121f97580bfdcc2ba0b),
-[f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43) and
-[94ffa4d](https://github.com/SnipToday/SnipCoin/commit/94ffa4d4a3750c0cf584ac63a1df464dd4d6c3dc).
+Status: There are a few outstanding low importance changes that were recommended and being considered.
 
 <br />
 
 ## Summary
 
+[Snip](https://www.snip.today/) intends to run a [crowdsale](https://www.snip.network/sale/signup/?next=/sale/) commencing on
+September 29 2017.
+
+Bok Consulting Pty Ltd was commissioned to perform an audit on the Ethereum smart contracts for Snip's crowdsale.
+
+This audit has been conducted on Snip's source code in commits
+[547c295](https://github.com/SnipToday/SnipCoin/commit/547c295895700ce44ab5d63cab506978e2f01634),
+[022fbf8](https://github.com/SnipToday/SnipCoin/commit/022fbf8f901cba0dcffe8121f97580bfdcc2ba0b),
+[f9d4c42](https://github.com/SnipToday/SnipCoin/commit/f9d4c4290dfa477e7d07578b10a6cd35e69cfa43) and
+[94ffa4d](https://github.com/SnipToday/SnipCoin/commit/94ffa4d4a3750c0cf584ac63a1df464dd4d6c3dc).
+
+No potential vulnerabilities have been identified in the crowdsale and token contract.
+
+<br />
+
+### Crowdsale Mainnet Addresses
+
+`TBA`
+
+<br />
+
 ### Crowdsale And Token Contract
+
+The *SnipCoin* crowdsale and token contract will accept ethers (ETH) sent from Ethereum account to the contract address.
+
+Accounts contributing to this crowdsale will have to be registered by Snip in either the capped or uncapped whitelist.
+
+ETH contributed by participants to the *SnipCoin* crowdsale contract will result in SNIP tokens being allocated to the
+participant's account in the token contract. The contributed ETHs are immediately transferred to the `saleWalletAddress`
+wallet, reducing the risk of the loss of ETHs in this bespoke smart contract.
+
+The crowdsale contract will generate `Transfer({contract owner}, {participantAddress}, {tokens})` events during the crowdsale
+period and this event is used by token explorers to recognise the token contract and to display the ongoing token sale progress.
+
+The *SnipCoin* token contract is [ERC20 token standard]https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md)
+compliant with the following features:
+
+* `decimals` is correctly defined as `uint8` instead of `uint256`
+* `name` is `SnipCoin`
+* `symbol` is `SNIP`
+* `transfer(...)` and `transferFrom(...)` will return false if there is an error instead of throwing an error. A 0 value transfer will
+  return true
+* `transfer(...)` and `transferFrom(...)` have not been built with a check on the size of the data being passed. This check is
+  not an effective check anyway - refer to [Smart
+  Contract Short Address Attack Mitigation Failure](https://blog.coinfabrik.com/smart-contract-short-address-attack-mitigation-failure/)
+* `approve(...)` does not require that a non-zero approval limit be set to 0 before a new non-zero limit can be set. Refer to
+  [this](https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729) for further information
+
+This *SnipCoin* token contract does not use *SafeMath* but has the checks to prevent unsigned integer math overflows and underflows.
 
 <br />
 
@@ -25,10 +63,12 @@ Commits
 ## Table Of Contents
 
 * [Summary](#summary)
+  * [Crowdsale Mainnet Addresses](#crowdsale-mainnet-addresses)
   * [Crowdsale And Token Contract](#crowdsale-and-token-contract)
 * [Recommendations](#recommendations)
   * [First Review Recommendations](#first-review-recommendations)
   * [Second Review Recommendations](#second-review-recommendations)
+  * [Third Review Recommendations](#third-review-recommendations)
 * [Potential Vulnerabilities](#potential-vulnerabilities)
 * [Scope](#scope)
 * [Limitations](#limitations)
@@ -270,11 +310,27 @@ For an example, see [test/modifiedContracts/SnipCoin_secondreview_example.sol](t
 
 <br />
 
+### Third Review Recommendations
+
+* **LOW IMPORTANCE** `getBalance(...)` is exact duplicate of the ERC20 standard function `balanceOf(...)`
+
+* **LOW IMPORTANCE** Some of the recent tokens have a requirement that a non-0 approval amount must be set to 0 before being able to set it
+  to a new non-0 approval amount. See [GimliToken.sol](https://github.com/bokkypoobah/GimliTokenContractAudit/blob/master/sol/GimliToken.sol#L79-L83_
+  for an example, including the linked comment
+  
+* **LOW IMPORTANCE** The `transfer(...)` and `transferFrom(...)` return a false if the transfer fails. Some of the newer tokens throw
+  an error instead of returning false - search for "throw" in the [ERC20 standard](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md)
+
+* **LOW IMPORTANCE** The whitelisted cap amount applies to each transaction and not a participant's total contributions. Consider whether
+  the cap amount should be applied to a participant's total contribution or to each individual transaction
+
+<br />
+
 <hr />
 
 ## Potential Vulnerabilities
 
-**TODO** Confirm that no potential vulnerabilities have been identified in the crowdsale and token contract.
+No potential vulnerabilities have been identified in the crowdsale and token contract.
 
 <br />
 
@@ -330,9 +386,6 @@ matches the audited source code, and that the deployment parameters are correctl
 
 ## Testing
 
-NOTE that the testing below has been conducted on [test/modifiedContracts/SnipCoin.sol](test/modifiedContracts/SnipCoin.sol) that
-is an example of the second set of recommended alterations to [../contracts/SnipCoin.sol](../contracts/SnipCoin.sol).
-
 The following functions were tested using the script [test/01_test1.sh](test/01_test1.sh) with the summary results saved
 in [test/test1results.txt](test/test1results.txt) and the detailed output saved in [test/test1output.txt](test/test1output.txt):
 
@@ -357,7 +410,13 @@ Details of the testing environment can be found in [test](test).
 
 ## Code Review
 
-* [ ] [code-review/SnipCoin.md](code-review/SnipCoin.md)
-  * [x] contract Token 
-  * [x] contract StandardToken is Token 
-  * [ ] contract SnipCoin is StandardToken 
+* [x] [code-review/SnipCoin.md](code-review/SnipCoin.md)
+  * [x] contract Token
+  * [x] contract StandardToken is Token
+  * [x] contract SnipCoin is StandardToken
+
+<br />
+
+<br />
+
+(c) BokkyPooBah / Bok Consulting Pty Ltd for Snip - Sep 25 2017. The MIT Licence.
