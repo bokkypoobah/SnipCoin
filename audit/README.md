@@ -49,18 +49,18 @@ wallet, reducing the risk of the loss of ETHs in this bespoke smart contract.
 The crowdsale contract will generate `Transfer({contract owner}, {participantAddress}, {tokens})` events during the crowdsale
 period and this event is used by token explorers to recognise the token contract and to display the ongoing token sale progress.
 
-The *SnipCoin* token contract is [ERC20 token standard]https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md)
+The *SnipCoin* token contract is [ERC20 token standard](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md)
 compliant with the following features:
 
 * `decimals` is correctly defined as `uint8` instead of `uint256`
 * `name` is `SnipCoin`
 * `symbol` is `SNIP`
-* `transfer(...)` and `transferFrom(...)` will return throw if there is an error instead of returning false. A 0 value transfer will
+* `transfer(...)` and `transferFrom(...)` will throw if there is an error instead of returning false. A 0 value transfer will
   return true
 * `transfer(...)` and `transferFrom(...)` have not been built with a check on the size of the data being passed. This check is
   not an effective check anyway - refer to [Smart
   Contract Short Address Attack Mitigation Failure](https://blog.coinfabrik.com/smart-contract-short-address-attack-mitigation-failure/)
-* `approve(...)` does requires that a non-zero approval limit be set to 0 before a new non-zero limit can be set. Refer to
+* `approve(...)` does require that a non-zero approval limit be set to 0 before a new non-zero limit can be set. Refer to
   [this](https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729) for further information
 
 This *SnipCoin* token contract does not use *SafeMath* but has the checks to prevent unsigned integer math overflows and underflows.
