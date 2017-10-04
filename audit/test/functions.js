@@ -195,6 +195,7 @@ function printTokenContractDetails() {
     console.log("RESULT: token.decimals=" + decimals);
     console.log("RESULT: token.totalEthReceivedInWei=" + contract.totalEthReceivedInWei().shift(-18));
     console.log("RESULT: token.totalUsdReceived=" + contract.totalUsdReceived());
+    console.log("RESULT: token.totalUsdValueOfAllTokens=" + contract.totalUsdValueOfAllTokens());
     console.log("RESULT: token.version=" + contract.version());
     console.log("RESULT: token.saleWalletAddress=" + contract.saleWalletAddress());
     console.log("RESULT: token.snipCoinToEtherExchangeRate=" + contract.snipCoinToEtherExchangeRate());

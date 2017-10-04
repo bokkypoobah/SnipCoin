@@ -1,7 +1,5 @@
 # SnipCoin Token Contract Audit
 
-Status: Report completed, with one low importance improvement outstanding
-
 <br />
 
 ## Summary
@@ -18,8 +16,9 @@ This audit has been conducted on Snip's source code in commits
 [94ffa4d](https://github.com/SnipToday/SnipCoin/commit/94ffa4d4a3750c0cf584ac63a1df464dd4d6c3dc),
 [07a5991](https://github.com/SnipToday/SnipCoin/commit/07a5991327b7c26e040e319aa67205ff96697a7d),
 [a5c4d0d](https://github.com/SnipToday/SnipCoin/commit/a5c4d0d32dcfeb9aa120a208c4ba285fdacabe60),
-[4cda853](https://github.com/SnipToday/SnipCoin/commit/4cda85368a553832b01e16ebfcff43c816ed6b02) and
-[bf168d8](https://github.com/SnipToday/SnipCoin/commit/bf168d8e22fa6b73792513e6ce4e611a2f8209eb).
+[4cda853](https://github.com/SnipToday/SnipCoin/commit/4cda85368a553832b01e16ebfcff43c816ed6b02),
+[bf168d8](https://github.com/SnipToday/SnipCoin/commit/bf168d8e22fa6b73792513e6ce4e611a2f8209eb) and
+[44a48f3](https://github.com/SnipToday/SnipCoin/commit/44a48f3567c0c97b31371c7cbe77c071665677c2).
 
 No potential vulnerabilities have been identified in the crowdsale and token contract.
 
@@ -32,7 +31,9 @@ executes `allowTransfers()`.
 
 ### Crowdsale Mainnet Addresses
 
-`TBA`
+Crowdsale and token contract deployed to [0x44f588aeeb8c44471439d1270b3603c66a9262f1](https://etherscan.io/address/0x44f588aeeb8c44471439d1270b3603c66a9262f1#code).
+
+Crowdsale wallet at [0xb4ad56e564aab5409fe8e34637c33a6d3f2a0038](https://etherscan.io/address/0xb4ad56e564aab5409fe8e34637c33a6d3f2a0038).
 
 <br />
 
@@ -353,6 +354,8 @@ For an example, see [test/modifiedContracts/SnipCoin_secondreview_example.sol](t
 
 * **LOW IMPORTANCE** Fix compiler warning from using `throw` in `transfer(...)` and `transferFrom(...)` instead of `revert()`
 
+  * [x] `throw` statement left as is
+
 <br />
 
 <hr />
@@ -497,4 +500,4 @@ Details of the testing environment can be found in [test](test).
 
 <br />
 
-(c) BokkyPooBah / Bok Consulting Pty Ltd for Snip - Sep 25 2017. The MIT Licence.
+(c) BokkyPooBah / Bok Consulting Pty Ltd for Snip - Oct 5 2017. The MIT Licence.

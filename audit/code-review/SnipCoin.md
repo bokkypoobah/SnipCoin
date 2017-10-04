@@ -151,6 +151,8 @@ contract SnipCoin is StandardToken {
     uint public totalEthReceivedInWei;                // The total amount of Ether received during the sale in WEI
     uint public totalUsdReceived;                     // The total amount of Ether received during the sale in USD terms
     // BK Ok
+    uint public totalUsdValueOfAllTokens;             // The total USD value of 100% of tokens
+    // BK Ok
     string public version = "1.0";                    // Code version
     // BK NOTE - Safer that this is different to accountWithUpdatePermissions or contractOwner
     // BK Ok
@@ -175,6 +177,8 @@ contract SnipCoin is StandardToken {
     // BK Ok
     address public accountWithUpdatePermissions = 0x686f152daD6490DF93B267E319f875A684Bd26e2;
 
+    // BK Ok
+    uint public constant PERCENTAGE_OF_TOKENS_SOLD_IN_SALE = 28;     // Percentage of all the tokens being sold in the current sale
     // BK Ok
     uint public constant DECIMALS_MULTIPLIER = 10**uint(decimals);   // Multiplier for the decimals
     // BK Ok
@@ -261,6 +265,8 @@ contract SnipCoin is StandardToken {
     function initializeUsdReceived() internal {
         // BK Ok
         totalUsdReceived = 4000000; // USD received before public sale. Verify this figure before the sale starts.
+        // BK Ok
+        totalUsdValueOfAllTokens = totalUsdReceived * 100 / PERCENTAGE_OF_TOKENS_SOLD_IN_SALE; // sold tokens are 28% of all tokens
     }
 
     // BK NOTE - ethToUsdExchangeRate should be set to a sensible value and not be 0, or this will cause a division by 0 error
@@ -358,10 +364,11 @@ contract SnipCoin is StandardToken {
         // BK Ok - Log event
         Transfer(contractOwner, msg.sender, tokens);
 
-        // BK Next 2 Ok
+        // BK Next 4 Ok
         totalEthReceivedInWei = totalEthReceivedInWei + msg.value; // total eth received counter
         uint usdReceivedInCurrentTransaction = uint(msg.value / getWeiToUsdExchangeRate());
         totalUsdReceived = totalUsdReceived + usdReceivedInCurrentTransaction; // total usd received counter
+        totalUsdValueOfAllTokens = totalUsdReceived * 100 / PERCENTAGE_OF_TOKENS_SOLD_IN_SALE; // sold tokens are 28% of all tokens
 
         // BK Ok
         if (cappedBuyerList[msg.sender] > 0)
